@@ -29,6 +29,10 @@
     # Adds indentation guides
     # https://nix-community.github.io/nixvim/plugins/indent-blankline/index.html
     indent-blankline.enable = true;
+
+    # Automatically opens files at your last edit position
+    # https://nix-community.github.io/nixvim/plugins/lastplace/settings.html?highlight=lastpl#pluginslastplacesettings
+    lastplace.enable = true;
   };
 
   opts = {
