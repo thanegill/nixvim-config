@@ -2,6 +2,7 @@
 
   imports = [
     ./plugins/telescope.nix
+    ./plugins/suda.nix
   ];
 
   plugins = {

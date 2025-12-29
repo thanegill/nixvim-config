@@ -4,6 +4,7 @@
     ./plugins/whitespace.nix
     ./plugins/mini.nix
     ./plugins/conform.nix
+    ./plugins/suda.nix
   ];
 
   plugins = {
