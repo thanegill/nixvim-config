@@ -1,11 +1,10 @@
-{
+{ ... }: {
+
   plugins.whitespace = {
     enable = true;
     settings = {
       highlight = "DiffDelete";
 
-      #`ignored_filetypes` configures which filetypes to ignore when
-      # displaying trailing whitespace
       ignored_filetypes = [
         "TelescopePrompt"
         "Trouble"
@@ -13,11 +12,8 @@
         "dashboard"
       ];
 
-      # `ignore_terminal` configures whether to ignore terminal buffers
       ignore_terminal = true;
 
-      # `return_cursor` configures if cursor should return to previous
-      # position after trimming whitespace
       return_cursor = true;
     };
   };

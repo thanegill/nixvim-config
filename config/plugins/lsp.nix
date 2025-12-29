@@ -54,9 +54,12 @@
   # and elegantly composed help section, `:help lsp-vs-treesitter`
   #
   # https://nix-community.github.io/nixvim/plugins/lsp/index.html
-  plugins.lsp-status.enable = true;
-  plugins.lsp-signature.enable = true;
-  plugins.lspconfig.enable = true;
+  plugins = {
+    lsp-status.enable = true;
+    lsp-signature.enable = true;
+    # lspconfig.enable = true;
+  };
+
   plugins.lsp = {
     enable = true;
 
@@ -123,7 +126,10 @@
       # awk_ls.enable = true;
       bashls.enable = true;
       jsonls.enable = true;
-      nixd.enable = true;
+      nixd = {
+        enable = true;
+        # TODO: Configure nix options: https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
+      };
 
       jedi_language_server.enable = true;
       ruff.enable = true;
@@ -224,10 +230,7 @@
         # Execute a code action, usually your cursor needs to be on top of an error
         # or a suggestion from your LSP for this to activate.
         "gra" = {
-          mode = [
-            "n"
-            "x"
-          ];
+          mode = [ "n" "x" ];
           action = "code_action";
           desc = "LSP: [G]oto Code [A]ction";
         };

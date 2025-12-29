@@ -19,14 +19,9 @@
           group = "[T]oggle";
         }
         {
+          mode = [ "n" "v" "o" "x" ];
           __unkeyed-1 = "<leader>h";
           group = "Git [H]unk";
-          mode = [
-            "n"
-            "v"
-            "o"
-            "x"
-          ];
         }
       ];
     };
