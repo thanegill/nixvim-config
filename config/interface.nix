@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
     ./plugins/which-key.nix
+    ./plugins/readline.nix
   ];
 
  extraConfigLua = ''
