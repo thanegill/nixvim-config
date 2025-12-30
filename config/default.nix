@@ -6,6 +6,7 @@
     ./editing.nix
     ./interface.nix
     ./navigation.nix
+    ./session.nix
     ./git.nix
     ./plugins/lsp.nix
     ./plugins/blink-cmp.nix
