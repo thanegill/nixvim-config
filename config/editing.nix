@@ -5,6 +5,7 @@
     ./plugins/mini.nix
     ./plugins/conform.nix
     ./plugins/suda.nix
+    ./plugins/treejs.nix
   ];
 
   plugins = {
@@ -18,9 +19,6 @@
     # mini-surround.enable = true;
     # nvim-surround.enable = true;
     vim-surround.enable = true;
-
-    # https://nix-community.github.io/nixvim/plugins/mmini-splitjoin/index.html
-    mini-splitjoin.enable = true;
 
     # Preview CSS colors in Vim.
     # https://nix-community.github.io/nixvim/plugins/vim-css-color/index.html
