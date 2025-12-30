@@ -1,10 +1,15 @@
-{ ... }: {
+{ enableNerdFont, ... }: {
   imports = [
     ./plugins/which-key.nix
     ./plugins/readline.nix
   ];
 
- extraConfigLua = ''
+  plugins = {
+    # Adds icons for plugins to utilize in ui
+    web-devicons.enable = enableNerdFont;
+  };
+
+  extraConfigLua = ''
     vim.opt.shortmess:append("I")
     vim.opt.fillchars:append("vert:\ ")
   '';

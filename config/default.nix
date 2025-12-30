@@ -1,8 +1,5 @@
-{ ... }: let
+{ enableNerdFont, ... }: {
 
-  enable_nerd_fonts = false;
-
-in {
   imports = [
     ./filetypes
     ./search.nix
@@ -18,9 +15,6 @@ in {
 
     yaml-schema-detect.enable = true;
 
-    # Adds icons for plugins to utilize in ui
-    web-devicons.enable = enable_nerd_fonts;
-
     # Detect tabstop and shiftwidth automatically
     # https://nix-community.github.io/nixvim/plugins/guess-indent/index.html
     guess-indent.enable = true;
@@ -34,7 +28,7 @@ in {
     maplocalleader = mapleader;
 
     # Set to true if you have a Nerd Font installed and selected in the terminal
-    have_nerd_font = enable_nerd_fonts;
+    have_nerd_font = enableNerdFont;
   };
 
   editorconfig.enable = true;
