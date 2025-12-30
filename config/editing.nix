@@ -63,6 +63,9 @@
     softtabstop = 4;
     shiftwidth = 4;
     smartindent = true;
+
+    # Default textwidth
+    textwidth = 80;
   };
 
   #  See `:help 'clipboard'`
@@ -88,4 +91,21 @@
   extraConfigLua = ''
     vim.opt.iskeyword:append("-")
   '';
+
+  # https://nix-community.github.io/nixvim/NeovimOptions/autoGroups/index.html
+  autoGroups.kickstart-highlight-yank.clear = true;
+
+  # https://nix-community.github.io/nixvim/NeovimOptions/autoCmd/index.html
+  autoCmd = [ {
+    # Highlight when yanking (copying) text
+    # See `:help vim.hl.on_yank()`
+    desc = "Highlight when yanking text";
+    event = [ "TextYankPost" ];
+    group = "kickstart-highlight-yank";
+    callback.__raw = ''
+      function()
+        vim.hl.on_yank()
+      end
+    '';
+  } ];
 }

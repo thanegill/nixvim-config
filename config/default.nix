@@ -11,15 +11,6 @@
     ./plugins/blink-cmp.nix
   ];
 
-  plugins = {
-
-    yaml-schema-detect.enable = true;
-
-    # Detect tabstop and shiftwidth automatically
-    # https://nix-community.github.io/nixvim/plugins/guess-indent/index.html
-    guess-indent.enable = true;
-  };
-
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
   globals = rec {
     # Set <space> as the leader key
@@ -33,9 +24,6 @@
 
   editorconfig.enable = true;
 
-  # See `:help vim.o`
-  # NOTE: You can change these options as you wish!
-  # For more options, you can see `:help option-list`
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#opts
   opts = {
 
@@ -57,41 +45,18 @@
     confirm = true;
   };
 
-  # See `:help vim.keymap.set()`
-  # https://nix-community.github.io/nixvim/keymaps/index.html
-  keymaps = [
-    # Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
-    # for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
-    # is not what someone will guess without a bit more experience.
-    #
-    # NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
-    # or just use <C-\><C-n> to exit terminal mode
-    {
-      mode = "t";
-      key = "<Esc><Esc>";
-      action = "<C-\\><C-n>";
-      options.desc = "Exit terminal mode";
-    }
-  ];
-
-  # https://nix-community.github.io/nixvim/NeovimOptions/autoGroups/index.html
-  autoGroups.kickstart-highlight-yank.clear = true;
-
-  # See `:help lua-guide-autocommands`
-  # https://nix-community.github.io/nixvim/NeovimOptions/autoCmd/index.html
-  autoCmd = [ {
-  # Highlight when yanking (copying) text
-  #  Try it with `yap` in normal mode
-  #  See `:help vim.hl.on_yank()`
-    event = [ "TextYankPost" ];
-    desc = "Highlight when yanking (copying) text";
-    group = "kickstart-highlight-yank";
-    callback.__raw = ''
-      function()
-        vim.hl.on_yank()
-      end
-    '';
-  } ];
+  # Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+  # for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+  # is not what someone will guess without a bit more experience.
+  #
+  # NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+  # or just use <C-\><C-n> to exit terminal mode
+  keymaps = [{
+    mode = "t";
+    key = "<Esc><Esc>";
+    action = "<C-\\><C-n>";
+    options.desc = "Exit terminal mode";
+  }];
 
   diagnostic = {
     settings = {

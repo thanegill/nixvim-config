@@ -22,8 +22,6 @@
     mode = "n";
     key = "<leader>dw";
     action.__raw = "require('whitespace-nvim').trim";
-    options = {
-      desc = "Remove trailing whitespace";
-    };
+    options.desc = "Remove trailing whitespace";
   }];
 }
