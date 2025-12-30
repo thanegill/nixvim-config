@@ -9,6 +9,17 @@
   ];
 
   plugins = {
+    # crs snake_case
+    # crm MixedCase
+    # crc camelCase
+    # cru UPPER_CASE
+    # cr dash-case
+    # cr. dot.cas
+    #
+    # https://nix-community.github.io/nixvim/plugins/abolish/index.html
+    # https://github.com/tpope/vim-abolish/
+    abolish.enable = true;
+
     # Comments. Supports treesitter, dot repeat, left-right/up-down motions,
     # hooks, and more.
     # https://nix-community.github.io/nixvim/plugins/comment/index.html
