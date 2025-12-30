@@ -9,8 +9,11 @@
   ];
 
   plugins = {
-    # https://nix-community.github.io/nixvim/plugins/commentary/index.html
-    commentary.enable = true;
+    # Comments. Supports treesitter, dot repeat, left-right/up-down motions,
+    # hooks, and more.
+    # https://nix-community.github.io/nixvim/plugins/comment/index.html
+    # https://github.com/numtostr/comment.nvim/
+    comment.enable = true;
 
     # Enable repeating supported plugin maps with the '.' command.
     # https://nix-community.github.io/nixvim/plugins/repeat/index.html
