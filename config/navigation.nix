@@ -47,4 +47,10 @@
     }
   ];
 
+  # When moving through the jumplist, |changelist|, |alternate-file| or using
+  # |mark-motions| try to restore the |mark-view| in which the action occurred.
+  extraConfigLua = ''
+    vim.opt.jumpoptions:append("view")
+  '';
+
 }
