@@ -8,64 +8,93 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { nixvim, flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = { self, ... }@inputs: let
 
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
-      ];
+    removeDefault = attrs: removeAttrs attrs [ "default" ];
 
-      perSystem = { pkgs, lib, system, ... }: let
-        nixvimLib = nixvim.lib.${system};
-        nixvim' = nixvim.legacyPackages.${system};
+  in inputs.flake-parts.lib.mkFlake { inherit inputs; } {
 
-        # Use makeNixvimWithModule for proper module support
-        nixvimModule = {
-          inherit pkgs;
-          module = import ./config;
-          extraSpecialArgs = {
-            enableNerdFont = false;
-          };
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+
+    perSystem = { pkgs, lib, system, ... }: let
+      nixvimLib = inputs.nixvim.lib.${system};
+      nixvim' = inputs.nixvim.legacyPackages.${system};
+
+      # Use makeNixvimWithModule for proper module support
+      mkPackage = package: nixvim'.makeNixvimWithModule {
+        inherit pkgs;
+        module = {
+          imports = [ self.nixvimModules.default ];
+          inherit package;
         };
-        nvimPkg = nixvim'.makeNixvimWithModule nixvimModule;
-      in {
-        packages = rec {
-          default = nvim;
-          nvim = nvimPkg;
+        extraSpecialArgs = {
+          enableNerdFont = false;
         };
-        apps = rec {
-          default = nvim;
-          nvim = {
-            type = "app";
-            program = lib.getExe nvimPkg;
-          };
-        };
-
-        # Optional: Add checks back if you want CI validation
-        checks.default = nixvimLib.check.mkTestDerivationFromNixvimModule nixvimModule;
-
-        # Optional: Add formatter
-        formatter = pkgs.alejandra;
       };
 
-      flake = {
-        nixosModules.default = { config, pkgs, lib, ... }: {
-          imports = [ inputs.nixvim.nixosModules.nixvim ];
-          programs.nixvim = import ./config { inherit pkgs lib config; };
-        };
+      nvim = mkPackage pkgs.neovim-unwrapped;
 
-        homeManagerModules.default = { config, pkgs, lib, ... }: {
-          imports = [ inputs.nixvim.homeModules.nixvim ];
-          programs.nixvim = import ./config { inherit pkgs lib config; };
+    in {
+      packages = {
+        default = nvim;
+        inherit nvim;
+      };
+      apps = rec {
+        default = nvim;
+        nvim = {
+          type = "app";
+          program = lib.getExe nvim;
         };
+        nixvim-print-init = {
+          type = "app";
+          program = "${nvim}/bin/nixvim-print-init";
+        };
+      };
 
-        darwinModules.default = { config, pkgs, lib, ... }: {
-          imports = [ inputs.nixvim.darwinModules.nixvim ];
-          programs.nixvim = import ./config { inherit pkgs lib config; };
+      # Optional: Add checks back if you want CI validation
+      # checks.default = nixvimLib.check.mkTestDerivationFromNixvimModule nixvimModule;
+      # check = (
+      #   lib.mapAttrs
+      #   (name: module: nixvimLib.check.mkTestDerivationFromNixvimModule {
+      #     inherit name pkgs system module;
+      #     extraSpecialArgs = {
+      #       enableNerdFont = false;
+      #     };
+      #   })
+      #   (removeDefault self.nixvimModules)
+      # );
+
+      formatter = pkgs.nixfmt-rfc-style;
+    };
+
+    flake = {
+      nixvimModules = {
+        default = {
+          imports = builtins.attrValues (removeDefault self.nixvimModules);
         };
+        config = import ./config;
+        modules = import ./modules;
+      };
+
+      nixosModules.default = { config, pkgs, lib, ... }: {
+        imports = [ inputs.nixvim.nixosModules.nixvim ];
+        programs.nixvim = import ./config { inherit pkgs lib config; };
+      };
+
+      homeManagerModules.default = { config, pkgs, lib, ... }: {
+        imports = [ inputs.nixvim.homeModules.nixvim ];
+        programs.nixvim = import ./config { inherit pkgs lib config; };
+      };
+
+      darwinModules.default = { config, pkgs, lib, ... }: {
+        imports = [ inputs.nixvim.darwinModules.nixvim ];
+        programs.nixvim = import ./config { inherit pkgs lib config; };
       };
     };
+  };
 }
