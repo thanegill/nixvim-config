@@ -68,14 +68,6 @@
     textwidth = 80;
   };
 
-  #  See `:help 'clipboard'`
-  clipboard = {
-
-    # Sync clipboard between OS and Neovim
-    #  Remove this option if you want your OS clipboard to remain independent.
-    # register = "unnamedplus";
-  };
-
   keymaps = [
     # Disable arrow keys in normal mode
     { mode = "n"; key = "<up>"; action = "<cmd>echo 'Use k to move!'<CR>"; }
@@ -83,11 +75,12 @@
     { mode = "n"; key = "<left>"; action = "<cmd>echo 'Use h to move!'<CR>"; }
     { mode = "n"; key = "<right>"; action = "<cmd>echo 'Use l to move!'<CR>"; }
 
-    # Indent/unindented lines
+    # Reselect on indent/unindented in visual mode.
     { mode = "v"; key = ">"; action = ">gv"; }
     { mode = "v"; key = "<"; action = "<gv"; }
   ];
 
+  # Tread hyphenated words as words.
   extraConfigLua = ''
     vim.opt.iskeyword:append("-")
   '';

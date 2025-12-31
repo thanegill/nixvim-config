@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
 
   # Alternatives:
   # https://github.com/nvim-mini/mini.splitjoin
@@ -47,18 +47,20 @@
   autoCmd = [{
     desc = "Config treejs on unsupported languages";
     event = [ "FileType" ];
-    callback.__raw = ''
+    callback.__raw = let
+      mSJKeymap = config.plugins.mini-splitjoin.settings.mappings;
+    in ''
       function()
         local langs = require'treesj.langs'['presets']
 
         if langs[vim.bo.filetype] then
           local opts = { buffer = true }
-          vim.keymap.set('n', 'gs', require("treesj").toggle, opts)
-          vim.keymap.set('v', 'gs', require("treesj").toggle, opts)
-          vim.keymap.set('n', 'gS', require("treesj").split, opts)
-          vim.keymap.set('v', 'gS', require("treesj").split, opts)
-          vim.keymap.set('n', 'gJ', require("treesj").join, opts)
-          vim.keymap.set('v', 'gJ', require("treesj").join, opts)
+          vim.keymap.set('n', '${mSJKeymap.toggle}', require("treesj").toggle, opts)
+          vim.keymap.set('v', '${mSJKeymap.toggle}', require("treesj").toggle, opts)
+          vim.keymap.set('n', '${mSJKeymap.split}', require("treesj").split, opts)
+          vim.keymap.set('v', '${mSJKeymap.split}', require("treesj").split, opts)
+          vim.keymap.set('n', '${mSJKeymap.join}', require("treesj").join, opts)
+          vim.keymap.set('v', '${mSJKeymap.join}', require("treesj").join, opts)
         end
       end
     '';
