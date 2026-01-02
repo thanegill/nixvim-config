@@ -65,6 +65,17 @@
     # Automatically opens files at your last edit position
     # https://nix-community.github.io/nixvim/plugins/lastplace/settings.html?highlight=lastpl#pluginslastplacesettings
     lastplace.enable = true;
+
+    # https://nix-community.github.io/nixvim/plugins/hardtime/index.html
+    # https://github.com/m4xshen/hardtime.nvim/
+    hardtime = {
+      enable = true;
+      settings = {
+        restriction_mode = "hint";
+      };
+    };
+
+
   };
 
   opts = {
