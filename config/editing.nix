@@ -60,7 +60,13 @@
 
     # Adds indentation guides
     # https://nix-community.github.io/nixvim/plugins/indent-blankline/index.html
-    indent-blankline.enable = true;
+    indent-blankline = {
+      enable = true;
+      settings.scope = {
+        show_end = false;
+        show_start = false;
+      };
+    };
 
     # Automatically opens files at your last edit position
     # https://nix-community.github.io/nixvim/plugins/lastplace/settings.html?highlight=lastpl#pluginslastplacesettings
@@ -74,7 +80,6 @@
         restriction_mode = "hint";
       };
     };
-
 
   };
 
