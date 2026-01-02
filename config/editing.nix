@@ -86,6 +86,9 @@
 
     # Default textwidth
     textwidth = 80;
+
+    # Preview substitutions live, as you type!
+    inccommand = "split";
   };
 
   keymaps = [
