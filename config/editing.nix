@@ -100,6 +100,9 @@
 
     # Preview substitutions live, as you type!
     inccommand = "split";
+
+    # Don't fold by default
+    foldenable = false;
   };
 
   keymaps = [
