@@ -2,7 +2,6 @@
 
   imports = [
     ./plugins/whitespace.nix
-    ./plugins/mini.nix
     ./plugins/conform.nix
     ./plugins/suda.nix
     ./plugins/treejs.nix
@@ -30,7 +29,28 @@
     # https://nix-community.github.io/nixvim/plugins/repeat/index.html
     repeat.enable = true;
 
-    # mini-surround.enable = true;
+    # Better Around/Inside textobjects
+    #
+    # Examples:
+    #  - va)  - [V]isually select [A]round [)]paren
+    #  - yinq - [Y]ank [I]nside [N]ext [Q]uote
+    #  - ci'  - [C]hange [I]nside [']quote
+    #
+    # https://nix-community.github.io/nixvim/plugins/mini-ai/index.html
+    # https://github.com/nvim-mini/mini.ai/
+    mini-ai = {
+      enable = true;
+      settings.n_line = 500;
+    };
+
+    # Add/delete/replace surroundings (brackets, quotes, etc.)
+    #
+    # Examples:
+    #  - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+    #  - sd'   - [S]urround [D]elete [']quotes
+    #  - sr)'  - [S]urround [R]eplace [)] [']
+    #mini-surround.enable = true;
+
     # nvim-surround.enable = true;
     vim-surround.enable = true;
 

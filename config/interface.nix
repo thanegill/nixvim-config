@@ -7,6 +7,18 @@
   plugins = {
     # Adds icons for plugins to utilize in ui
     web-devicons.enable = enableNerdFont;
+
+    # https://nix-community.github.io/nixvim/plugins/lualine/index.html
+    # https://github.com/nvim-lualine/lualine.nvim
+    lualine = {
+      enable = true;
+      settings.options = {
+        icons_enabled = false;
+        # Disable seperators
+        section_separators = "";
+        component_separators = "";
+      };
+    };
   };
 
   extraConfigLua = ''
