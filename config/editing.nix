@@ -78,6 +78,7 @@
       enable = true;
       settings = {
         restriction_mode = "hint";
+        disable_mouse = false;
       };
     };
 
