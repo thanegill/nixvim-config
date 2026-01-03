@@ -37,18 +37,18 @@
         };
       };
 
-      nvim = mkPackage pkgs.neovim-unwrapped;
+      nvimPackage = mkPackage pkgs.neovim-unwrapped;
 
     in {
       packages = {
-        default = nvim;
-        inherit nvim;
+        default = nvimPackage;
+        nvim = nvimPackage;
       };
       apps = rec {
         default = nvim;
         nvim = {
           type = "app";
-          program = lib.getExe nvim;
+          program = lib.getExe nvimPackage;
         };
         nixvim-print-init = {
           type = "app";
