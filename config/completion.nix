@@ -11,9 +11,7 @@
   #
   # A snippet engine for Neovim
   # https://nix-community.github.io/nixvim/plugins/luasnip/index.html
-  plugins = {
-    luasnip.enable = true; # autoEnableSources not enough
-  };
+  plugins.luasnip.enable = true; # autoEnableSources not enough
 
   # Autocompletion
   # See `:help cmp`

@@ -33,7 +33,7 @@
     # Display certain whitespace characters in the editor.
     list = true;
     listchars = {
-      tab = "▸\ ";
+      tab = "▸ ";
       trail = "·";
       eol = "¬";
       nbsp = "⎵";

@@ -1,17 +1,7 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   # Useful status updates for LSP.
   # https://nix-community.github.io/nixvim/plugins/fidget/index.html
-  plugins.fidget = {
-    enable = true;
-  };
-
-  # https://nix-community.github.io/nixvim/NeovimOptions/autoGroups/index.html
-  autoGroups = {
-    "kickstart-lsp-attach" = {
-      clear = true;
-    };
-  };
+  plugins.fidget.enable = true;
 
   # A plugin that properly configures LuaLS for editing your Neovim config
   #  by lazily updating your workspace libraries.
@@ -19,12 +9,10 @@
   plugins.lazydev = {
     enable = true; # autoEnableSources not enough
     settings = {
-      library = [
-        {
-          path = "\${3rd}/luv/library";
-          words = [ "vim%.uv" ];
-        }
-      ];
+      library = [ {
+        path = "\${3rd}/luv/library";
+        words = [ "vim%.uv" ];
+      } ];
     };
   };
 
