@@ -8,8 +8,8 @@
     ./navigation.nix
     ./session.nix
     ./git.nix
-    ./plugins/lsp.nix
-    ./plugins/blink-cmp.nix
+    ./lsp.nix
+    ./completion.nix
   ];
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
