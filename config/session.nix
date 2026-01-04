@@ -1,6 +1,5 @@
 { config, lib, ... }:
 
-
 lib.mkMerge [
   {
     # https://nix-community.github.io/nixvim/plugins/auto-session/index.html

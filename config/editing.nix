@@ -1,4 +1,5 @@
 { lib, ... }: {
+
   imports = [
     ./plugins/whitespace.nix
     ./plugins/conform.nix
@@ -18,6 +19,11 @@
       # https://nix-community.github.io/nixvim/plugins/abolish/index.html
       # https://github.com/tpope/vim-abolish/
       abolish.enable = true;
+
+      # Inserts matching pairs of parens, brackets, etc.
+      # https://nix-community.github.io/nixvim/plugins/nvim-autopairs/index.html
+      # https://github.com/windwp/nvim-autopairs/
+      nvim-autopairs.enable = true;
 
       # Comments. Supports treesitter, dot repeat, left-right/up-down motions,
       # hooks, and more.
