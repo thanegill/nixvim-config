@@ -16,6 +16,7 @@
   # Autocompletion
   # See `:help cmp`
   # https://nix-community.github.io/nixvim/plugins/blink-cmp/index.html
+  # https://github.com/saghen/blink.cmp
   plugins.blink-cmp = {
     enable = true;
 
@@ -58,6 +59,15 @@
         auto_show_delay_ms = 250;
       };
 
+      completion.trigger = {
+        show_on_backspace = true;
+      };
+
+      completion.ghost_text = {
+        enabled = true;
+        show_without_selection = true;
+      };
+
       sources = {
         default = [
           "lsp"
@@ -71,6 +81,25 @@
             module = "lazydev.integrations.blink";
             score_offset = 100;
           };
+          # Filter to only "normal" buffers
+          # https://cmp.saghen.dev/recipes#buffer-completion-from-all-open-buffers
+          buffer.opts.get_bufnrs.__raw = ''
+            function()
+              return vim.tbl_filter(
+                function(bufnr)
+                  return vim.bo[bufnr].buftype == ""
+                end,
+                vim.api.nvim_list_bufs()
+              )
+            end
+          '';
+          # Path completion from cwd instead of current buffer's directory
+          # https://cmp.saghen.dev/recipes#path-completion-from-cwd-instead-of-current-buffer-s-directory
+          path.opts.get_cwd.__raw = ''
+            function(_)
+              return vim.fn.getcwd()
+            end
+          '';
         };
       };
 
