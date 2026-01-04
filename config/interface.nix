@@ -1,10 +1,13 @@
-{ enableNerdFont, ... }: {
-  imports = [
-    ./plugins/which-key.nix
-    ./plugins/readline.nix
+{ pkgs, enableNerdFont, ... }: {
+
+  extraPlugins = [
+    pkgs.vimPlugins.readline-vim
   ];
 
   plugins = {
+
+    which-key.enable = true;
+
     # Adds icons for plugins to utilize in ui
     web-devicons.enable = enableNerdFont;
 

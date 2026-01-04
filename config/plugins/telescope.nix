@@ -166,4 +166,24 @@
       };
     }
   ];
+
+
+  # Document existing key chains in which-key
+
+  plugins.which-key.settings.spec = [
+    {
+      __unkeyed-1 = "<leader>s";
+      group = "[S]earch";
+    }
+    {
+      __unkeyed-1 = "<leader>t";
+      group = "[T]oggle";
+    }
+    {
+      mode = [ "n" "v" "o" "x" ];
+      __unkeyed-1 = "<leader>h";
+      group = "Git [H]unk";
+    }
+  ];
+
 }
