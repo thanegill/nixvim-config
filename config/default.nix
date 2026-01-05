@@ -1,4 +1,4 @@
-{ enableNerdFont, ... }: {
+{ ... }: {
 
   imports = [
     ./filetypes
@@ -18,9 +18,6 @@
     # See `:help mapleader`
     mapleader = " ";
     maplocalleader = mapleader;
-
-    # Set to true if you have a Nerd Font installed and selected in the terminal
-    have_nerd_font = enableNerdFont;
   };
 
   editorconfig.enable = true;

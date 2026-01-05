@@ -1,4 +1,4 @@
-{ pkgs, enableNerdFont, ... }: {
+{ pkgs, config, ... }: {
 
   extraPlugins = [
     pkgs.vimPlugins.readline-vim
@@ -9,7 +9,7 @@
     which-key.enable = true;
 
     # Adds icons for plugins to utilize in ui
-    web-devicons.enable = enableNerdFont;
+    web-devicons.enable = config.hasNerdFont;
 
     # https://nix-community.github.io/nixvim/plugins/lualine/index.html
     # https://github.com/nvim-lualine/lualine.nvim

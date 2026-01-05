@@ -32,9 +32,6 @@
           imports = [ self.nixvimModules.default ];
           inherit package;
         };
-        extraSpecialArgs = {
-          enableNerdFont = false;
-        };
       };
 
       nvimPackage = mkPackage pkgs.neovim-unwrapped;
@@ -62,9 +59,6 @@
       #   lib.mapAttrs
       #   (name: module: nixvimLib.check.mkTestDerivationFromNixvimModule {
       #     inherit name pkgs system module;
-      #     extraSpecialArgs = {
-      #       enableNerdFont = false;
-      #     };
       #   })
       #   (removeDefault self.nixvimModules)
       # );
