@@ -74,26 +74,35 @@
 
     flake = {
       nixvimModules = {
-        default = {
+        default = { ... }: {
           imports = builtins.attrValues (removeDefault self.nixvimModules);
         };
         config = import ./config;
         modules = import ./modules;
       };
 
-      nixosModules.default = { config, pkgs, lib, ... }: {
-        imports = [ inputs.nixvim.nixosModules.nixvim ];
-        programs.nixvim = import ./config { inherit pkgs lib config; };
+      nixosModules = rec {
+        default = nixvim;
+        nixvim = args: {
+          imports = [ inputs.nixvim.nixosModules.nixvim ];
+          programs.nixvim = self.nixvimModules.default args;
+        };
       };
 
-      homeManagerModules.default = { config, pkgs, lib, ... }: {
-        imports = [ inputs.nixvim.homeModules.nixvim ];
-        programs.nixvim = import ./config { inherit pkgs lib config; };
+      homeManagerModules = rec {
+        default = nixvim;
+        nixvim = args: {
+          imports = [ inputs.nixvim.homeModules.nixvim ];
+          programs.nixvim = self.nixvimModules.default args;
+        };
       };
 
-      darwinModules.default = { config, pkgs, lib, ... }: {
-        imports = [ inputs.nixvim.darwinModules.nixvim ];
-        programs.nixvim = import ./config { inherit pkgs lib config; };
+      darwinModules = rec {
+        default = nixvim;
+        nixvim = args: {
+          imports = [ inputs.nixvim.darwinModules.nixvim ];
+          programs.nixvim = self.nixvimModules.default args;
+        };
       };
     };
   };
