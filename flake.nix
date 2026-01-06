@@ -94,7 +94,7 @@
       darwinModules = rec {
         default = nixvim;
         nixvim = args: {
-          imports = [ inputs.nixvim.darwinModules.nixvim ];
+          imports = [ inputs.nixvim.nixDarwinModules.nixvim ];
           programs.nixvim = self.nixvimModules.default args;
         };
       };
