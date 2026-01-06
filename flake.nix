@@ -83,7 +83,7 @@
         };
       };
 
-      homeManagerModules = rec {
+      homeModules = rec {
         default = nixvim;
         nixvim = args: {
           imports = [ inputs.nixvim.homeModules.nixvim ];
