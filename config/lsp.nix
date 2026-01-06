@@ -16,38 +16,13 @@
     };
   };
 
-  # Brief aside: **What is LSP?**
-  #
-  # LSP is an initialism you've probably heard, but might not understand what it is.
-  #
-  # LSP stands for Language Server Protocol. It's a protocol that helps editors
-  # and language tooling communicate in a standardized fashion.
-  #
-  # In general, you have a "server" which is some tool built to understand a particular
-  # language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-  # (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-  # processes that communicate with some "client" - in this case, Neovim!
-  #
-  # LSP provides Neovim with features like:
-  #  - Go to definition
-  #  - Find references
-  #  - Autocompletion
-  #  - Symbol Search
-  #  - and more!
-  #
-  # Thus, Language Servers are external tools that must be installed separately from
-  # Neovim which are configured below in the `server` section.
-  #
-  # If you're wondering about lsp vs treesitter, you can check out the wonderfully
-  # and elegantly composed help section, `:help lsp-vs-treesitter`
-  #
-  # https://nix-community.github.io/nixvim/plugins/lsp/index.html
   plugins = {
     lsp-status.enable = true;
     lsp-signature.enable = true;
     # lspconfig.enable = true;
   };
 
+  # https://nix-community.github.io/nixvim/plugins/lsp/index.html
   plugins.lsp = {
     enable = true;
 
@@ -75,9 +50,6 @@
       # };
       # ...etc. See `https://nix-community.github.io/nixvim/plugins/lsp` for a list of pre-configured LSPs
       #
-      # Some languages (like typscript) have entire language plugins that can be useful:
-      #    `https://nix-community.github.io/nixvim/plugins/typescript-tools/index.html?highlight=typescript-tools#pluginstypescript-toolspackage`
-      #
       # But for many setups the LSP (`ts_ls`) will work just fine
       # ts_ls = {
       #   enable = true;
@@ -85,15 +57,25 @@
 
       # Nix lsp
       nil_ls.enable = true;
+      nixd = {
+        enable = true;
+        # TODO: Configure nix options: https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
+        settings = {
+          nixd = {
+            # nixpkgs.expr = "import <nixpkgs> { }";
+            formatting.command = [ "nixfmt" ];
+             # options = {
+             #   nixos.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options'';
+             #   home-manager.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ruixi@k-on".options'';
+             # };
+          };
+        };
+      };
 
       # Lua lsp
       lua_ls = {
         enable = true;
 
-        # cmd = {
-        # };
-        # filetypes = {
-        # };
         settings = {
           completion = {
             callSnippet = "Replace";
@@ -165,8 +147,8 @@
           };
         }
         # Jump to the definition of the word under your cursor.
-        #  This is where a variable was first declared, or where a function is defined, etc.
-        #  To jump back, press <C-t>.
+        # This is where a variable was first declared, or where a function is defined, etc.
+        # To jump back, press <C-t>.
         {
           mode = "n";
           key = "grd";
@@ -176,7 +158,7 @@
           };
         }
         # Fuzzy find all the symbols in your current document.
-        #  Symbols are things like variables, functions, types, etc.
+        # Symbols are things like variables, functions, types, etc.
         {
           mode = "n";
           key = "gO";
@@ -186,7 +168,7 @@
           };
         }
         # Fuzzy find all the symbols in your current workspace.
-        #  Similar to document symbols, except searches over your entire project.
+        # Similar to document symbols, except searches over your entire project.
         {
           mode = "n";
           key = "gW";
@@ -196,8 +178,8 @@
           };
         }
         # Jump to the type of the word under your cursor.
-        #  Useful when you're not sure what type a variable is and you want to see
-        #  the definition of its *type*, not where it was *defined*.
+        # Useful when you're not sure what type a variable is and you want to
+        # see the definition of its *type*, not where it was *defined*.
         {
           mode = "n";
           key = "grt";
@@ -210,7 +192,7 @@
 
       lspBuf = {
         # Rename the variable under your cursor.
-        #  Most Language Servers support renaming across files, etc.
+        # Most Language Servers support renaming across files, etc.
         "grn" = {
           action = "rename";
           desc = "LSP: [R]e[n]ame";
@@ -222,8 +204,8 @@
           action = "code_action";
           desc = "LSP: [G]oto Code [A]ction";
         };
-        # WARN: This is not Goto Definition, this is Goto Declaration.
-        #  For example, in C this would take you to the header.
+        # WARN: This is not Goto Definition, this is Goto Declaration. For
+        # example, in C this would take you to the header.
         "grD" = {
           action = "declaration";
           desc = "LSP: [G]oto [D]eclaration";
@@ -231,25 +213,15 @@
       };
     };
 
-    # LSP servers and clients are able to communicate to each other what features they support.
-    #  By default, Neovim doesn't support everything that is in the LSP specification.
-    # NOTE: This is done automatically by Nixvim when enabling blink.cmp
-    #  Below is an example if you did want to add new capabilities
-    #capabilities = ''
-    #  require('blink.cmp').get_lsp_capabilities()
-    #'';
+    # LSP servers and clients are able to communicate to each other what
+    # features they support. By default, Neovim doesn't support everything that
+    # is in the LSP specification.
 
-    # This function gets run when an LSP attaches to a particular buffer.
-    #   That is to say, every time a new file is opened that is associated with
-    #   an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-    #   function will be executed to configure the current buffer
-    # NOTE: This is an example of an attribute that takes raw lua
+    # This function gets run when an LSP attaches to a particular buffer. That
+    # is to say, every time a new file is opened that is associated with an lsp
+    # (for example, opening `main.rs` is associated with `rust_analyzer`) this
+    # function will be executed to configure the current buffer.
     onAttach = ''
-      -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-      -- to define small helper and utility functions so you don't have to repeat yourself.
-      --
-      -- In this case, we create a function that lets us more easily define mappings specific
-      -- for LSP related items. It sets the mode, buffer and description for us each time.
       local map = function(keys, func, desc)
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
       end
@@ -288,7 +260,7 @@
         })
 
         vim.api.nvim_create_autocmd('LspDetach', {
-          group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+          group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
           callback = function(event2)
             vim.lsp.buf.clear_references()
             vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }

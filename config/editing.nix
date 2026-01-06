@@ -9,12 +9,16 @@
 
   config = lib.mkMerge [ {
     plugins = {
-      # crs snake_case
-      # crm MixedCase
       # crc camelCase
-      # cru UPPER_CASE
-      # cr dash-case
-      # cr. dot.cas
+      # crp PascalCase
+      # crm MixedCase (aka PascalCase)
+      # cr_ snake_case
+      # crs snake_case
+      # cru SNAKE_UPPERCASE
+      # crU SNAKE_UPPERCASE
+      # crk kebab-case (not usually reversible; see |abolish-coercion-reversible|)
+      # cr- dash-case (aka kebab-case)
+      # cr. dot.case (not usually reversible; see |abolish-coercion-reversible|)
       #
       # https://nix-community.github.io/nixvim/plugins/abolish/index.html
       # https://github.com/tpope/vim-abolish/

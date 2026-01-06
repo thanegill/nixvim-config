@@ -106,9 +106,7 @@
     }
   ];
 
-
   # Document existing key chains in which-key
-
   plugins.which-key.settings.spec = [
     {
       __unkeyed-1 = "<leader>s";
