@@ -49,7 +49,7 @@
         };
         nixvim-print-init = {
           type = "app";
-          program = "${nvim}/bin/nixvim-print-init";
+          program = "${nvimPackage}/bin/nixvim-print-init";
         };
       };
 
