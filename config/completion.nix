@@ -1,4 +1,4 @@
-{ ... }: {
+{ lib, config, ... }: {
   # `friendly-snippets` contains a variety of premade snippets
   #    See the README about individual language/framework/plugin snippets:
   #    https://github.com/rafamadriz/friendly-snippets
@@ -73,11 +73,12 @@
           "lsp"
           "path"
           "snippets"
-          "lazydev"
           "buffer"
-        ];
+        ]
+        ++ lib.optionals config.plugins.lazydev.enable "lazydev";
+
         providers = {
-          lazydev = {
+          lazydev = lib.mkIf config.plugins.lazydev.enable {
             module = "lazydev.integrations.blink";
             score_offset = 100;
           };
