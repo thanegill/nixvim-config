@@ -64,7 +64,6 @@
     # Keep signcolumn on by default
     signcolumn = "yes";
 
-    formatoptions = "tcroqnjp";
   };
 
   keymaps = [

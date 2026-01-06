@@ -119,6 +119,8 @@
 
       # Don't fold by default
       foldenable = false;
+
+      formatoptions = "tcroqnjp";
     };
 
     keymaps = [
