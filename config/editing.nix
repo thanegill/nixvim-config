@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{ lib, config, ... }: {
 
   imports = [
     ./plugins/whitespace.nix
@@ -27,7 +27,13 @@
       # Inserts matching pairs of parens, brackets, etc.
       # https://nix-community.github.io/nixvim/plugins/nvim-autopairs/index.html
       # https://github.com/windwp/nvim-autopairs/
-      nvim-autopairs.enable = true;
+      nvim-autopairs = {
+        enable = true;
+        settings = {
+          check_ts = config.plugins.treesitter.enable;
+          disable_in_visualblock = true;
+        };
+      };
 
       # Comments. Supports treesitter, dot repeat, left-right/up-down motions,
       # hooks, and more.
