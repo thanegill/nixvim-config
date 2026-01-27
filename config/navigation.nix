@@ -10,17 +10,6 @@
 
     # https://nix-community.github.io/nixvim/plugins/oil/index.html?highlight=oil#oil
     # File explorer: edit your filesystem like a buffer.
-    oil = {
-      enable = true;
-      # oil-git-status requires you configure plugins.oil to allow at least 2
-      # sign columns:
-      settings = {
-        win_options.signcolumn = "auto:1-2";
-        columns = [ "permissions" "size" "mtime" ];
-      };
-    };
-   # https://nix-community.github.io/nixvim/plugins/oil-git-status/index.html
-    oil-git-status.enable = true;
   };
 
   opts = {
