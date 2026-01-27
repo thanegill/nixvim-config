@@ -10,12 +10,12 @@ lib.mkMerge [
       settings = {
         purge_after_minutes = 60 * 24 * 60; # Delete sessions after 60 days;
         show_auto_restore_notif = true;
-        git_use_branch_name = true;
         preserve_buffer_on_restore.__raw = ''
           function()
             return true
           end
         '';
+        bypass_save_filetypes = [ "oil" "gitcommit" ];
         # Only save the session if there are at least two windows with buffers
         # backed by normal files.
         # https://github.com/rmagatti/auto-session/wiki/Argument-Handling
@@ -49,7 +49,6 @@ lib.mkMerge [
         "curdir"
         "folds"
         "help"
-        "localoptions"
         "tabpages"
         "terminal"
         "winpos"
@@ -57,24 +56,6 @@ lib.mkMerge [
       ];
     };
 
-    autoCmdGroup.auto-session.autoCmds = [{
-      desc = "Auto Save Session";
-      event = [
-        "BufAdd"
-        "BufNew"
-        "BufWinLeave"
-        "BufWinEnter"
-        "BufDelete"
-        "WinNew"
-        "WinClosed"
-        "WinResized"
-      ];
-      callback.__raw = ''
-        function()
-          require('auto-session').auto_save_session()
-        end
-      '';
-    }];
   }
 
   {
