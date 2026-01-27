@@ -1,20 +1,16 @@
 { pkgs, ... }: {
-  # Useful status updates for LSP.
+
+  # LSP progress notifications
   # https://nix-community.github.io/nixvim/plugins/fidget/index.html
+  # https://github.com/j-hui/fidget.nvim
   plugins.fidget.enable = true;
 
+  # Pretty diagnostics, references, telescope results, quickfix and location list
+  # https://nix-community.github.io/nixvim/plugins/trouble/index.html
+  # https://github.com/folke/trouble.nvim/
+  plugins.trouble.enable = true;
+
   # A plugin that properly configures LuaLS for editing your Neovim config
-  #  by lazily updating your workspace libraries.
-  #  https://nix-community.github.io/nixvim/plugins/lazydev/index.html
-  plugins.lazydev = {
-    enable = true; # autoEnableSources not enough
-    settings = {
-      library = [ {
-        path = "\${3rd}/luv/library";
-        words = [ "vim%.uv" ];
-      } ];
-    };
-  };
 
   plugins = {
     lsp-status.enable = true;
@@ -25,38 +21,26 @@
   # https://nix-community.github.io/nixvim/plugins/lsp/index.html
   plugins.lsp = {
     enable = true;
-
-    # Enable the following language servers
-    #  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-    #
-    #  Add any additional override configuration in the following tables. Available keys are:
-    #  - cmd: Override the default command used to start the server
-    #  - filetypes: Override the default list of associated filetypes for the server
-    #  - capabilities: Override fields in capabilities. Can be used to disable certain LSP features.
-    #  - settings: Override the default settings passed when initializing the server.
-    #        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     servers = {
-      # clangd = {
-      #   enable = true;
-      # };
-      # gopls = {
-      #   enable = true;
-      # };
-      # pyright = {
-      #   enable = true;
-      # };
-      # rust_analyzer = {
-      #   enable = true;
-      # };
-      # ...etc. See `https://nix-community.github.io/nixvim/plugins/lsp` for a list of pre-configured LSPs
+      # See `https://nix-community.github.io/nixvim/plugins/lsp` for a list of
+      # pre-configured LSPs
       #
-      # But for many setups the LSP (`ts_ls`) will work just fine
+      # But fr many setups the LSP (`ts_ls`) will work just fine
       # ts_ls = {
       #   enable = true;
       # };
 
       # Nix lsp
-      nil_ls.enable = true;
+      # https://github.com/oxalica/nil
+      nil_ls = {
+        enable = true;
+        # https://github.com/oxalica/nil/blob/main/docs/configuration.md
+        settings = {
+          nil.formatting.command = "nixfmt";
+          nix.flake.autoArchive = false;
+        };
+      };
+
       nixd = {
         enable = true;
         # TODO: Configure nix options: https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
@@ -87,6 +71,7 @@
           # };
         };
       };
+
       # ansiblels.enable = true;
       # diagnosticls.enable = true;
       # efm.enable = true;
@@ -96,18 +81,25 @@
       # awk_ls.enable = true;
       bashls.enable = true;
       jsonls.enable = true;
-      nixd = {
-        enable = true;
-        # TODO: Configure nix options: https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
-      };
 
+      # Python
       jedi_language_server.enable = true;
       ruff.enable = true;
       ty.enable = true;
-      textlsp = {
+      pyright.enable = true;
+
+      ltex_plus = {
         enable = true;
-        package = pkgs.textlsp;
+        package = pkgs.ltex-ls-plus;
+        settings = {
+          ltex = {
+            language = "en-US";
+          };
+        };
       };
+
+      typos_lsp.enable = true;
+
       vimls.enable = true;
       yamlls.enable = true;
       jinja_lsp = {
@@ -132,19 +124,16 @@
           mode = "n";
           key = "grr";
           action.__raw = "require('telescope.builtin').lsp_references";
-          options = {
-            desc = "LSP: [G]oto [R]eferences";
-          };
+          options.desc = "LSP: [G]oto [R]eferences";
         }
         # Jump to the implementation of the word under your cursor.
-        #  Useful when your language has ways of declaring types without an actual implementation.
+        # Useful when your language has ways of declaring types without an
+        # actual implementation.
         {
           mode = "n";
           key = "gri";
           action.__raw = "require('telescope.builtin').lsp_implementations";
-          options = {
-            desc = "LSP: [G]oto [I]mplementation";
-          };
+          options.desc = "LSP: [G]oto [I]mplementation";
         }
         # Jump to the definition of the word under your cursor.
         # This is where a variable was first declared, or where a function is defined, etc.
@@ -153,9 +142,7 @@
           mode = "n";
           key = "grd";
           action.__raw = "require('telescope.builtin').lsp_definitions";
-          options = {
-            desc = "LSP: [G]oto [D]efinition";
-          };
+          options.desc = "LSP: [G]oto [D]efinition";
         }
         # Fuzzy find all the symbols in your current document.
         # Symbols are things like variables, functions, types, etc.
@@ -163,9 +150,7 @@
           mode = "n";
           key = "gO";
           action.__raw = "require('telescope.builtin').lsp_document_symbols";
-          options = {
-            desc = "LSP: Open Document Symbols";
-          };
+          options.desc = "LSP: Open Document Symbols";
         }
         # Fuzzy find all the symbols in your current workspace.
         # Similar to document symbols, except searches over your entire project.
@@ -173,9 +158,7 @@
           mode = "n";
           key = "gW";
           action.__raw = "require('telescope.builtin').lsp_dynamic_workspace_symbols";
-          options = {
-            desc = "LSP: Open Workspace Symbols";
-          };
+          options.desc = "LSP: Open Workspace Symbols";
         }
         # Jump to the type of the word under your cursor.
         # Useful when you're not sure what type a variable is and you want to
@@ -184,9 +167,7 @@
           mode = "n";
           key = "grt";
           action.__raw = "require('telescope.builtin').lsp_type_definitions";
-          options = {
-            desc = "LSP: [G]oto [T]ype Definition";
-          };
+          options.desc = "LSP: [G]oto [T]ype Definition";
         }
       ];
 
