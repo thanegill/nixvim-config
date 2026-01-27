@@ -126,11 +126,11 @@
     { mode = "n"; key = "<C-k>"; action = "<C-w><C-k>"; options.desc = "Move focus to the upper window"; }
   ];
 
-  autoCmd = [{
+  autoCmdGroup.scrolloff.autoCmds = [{
     # Set scrolloff to 1/10 of the window height dynamically
     # https://stackoverflow.com/a/47154088/1202754
     event = [ "VimEnter" "WinEnter" "VimResized" ];
-    desc = "scrolloff to a 10th of the window height dynamically";
+    desc = "Set scrolloff to a 10th of the window height dynamically";
     callback.__raw = ''
       function()
         vim.opt.scrolloff = math.min(math.floor(vim.fn.winheight(0) / 10), 15)
