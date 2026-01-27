@@ -40,12 +40,13 @@
     confirm = true;
   };
 
-  # Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
-  # for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
-  # is not what someone will guess without a bit more experience.
+  # Exit terminal mode in the builtin terminal with a shortcut that is a bit
+  # easier for people to discover. Otherwise, you normally need to press
+  # <C-\><C-n>, which is not what someone will guess without a bit more
+  # experience.
   #
-  # NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
-  # or just use <C-\><C-n> to exit terminal mode
+  # NOTE: This won't work in all terminal emulators/tmux/etc. Try your own
+  # mapping or just use <C-\><C-n> to exit terminal mode.
   keymaps = [{
     mode = "t";
     key = "<Esc><Esc>";
@@ -56,33 +57,25 @@
   diagnostic = {
     settings = {
       severity_sort = true;
+      signs.__raw = ''
+        {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '󰅚',
+            [vim.diagnostic.severity.WARN] = '󰀪',
+            [vim.diagnostic.severity.INFO] = '󰋽',
+            [vim.diagnostic.severity.HINT] = '󰌶',
+          },
+        }
+      '';
       float = {
         border = "rounded";
-        source = "if_many";
+        source = true;
       };
-      underline.severity.__raw = ''vim.diagnostic.severity.ERROR'';
-      signs.__raw = ''
-        vim.g.have_nerd_font and {
-          text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚 ',
-            [vim.diagnostic.severity.WARN] = '󰀪 ',
-            [vim.diagnostic.severity.INFO] = '󰋽 ',
-            [vim.diagnostic.severity.HINT] = '󰌶 ',
-          },
-        } or {}
-      '';
       virtual_text = {
-        source = "if_many";
         spacing = 2;
-        format.__raw = ''
+        suffix.__raw = ''
           function(diagnostic)
-            local diagnostic_message = {
-              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-              [vim.diagnostic.severity.WARN] = diagnostic.message,
-              [vim.diagnostic.severity.INFO] = diagnostic.message,
-              [vim.diagnostic.severity.HINT] = diagnostic.message,
-            }
-            return diagnostic_message[diagnostic.severity]
+            return string.format(" [%s:%s]", diagnostic.source, diagnostic.code)
           end
         '';
       };
