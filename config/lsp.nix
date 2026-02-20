@@ -88,18 +88,6 @@
       ty.enable = true;
       pyright.enable = true;
 
-      ltex_plus = {
-        enable = true;
-        package = pkgs.ltex-ls-plus;
-        settings = {
-          ltex = {
-            language = "en-US";
-          };
-        };
-      };
-
-      typos_lsp.enable = true;
-
       vimls.enable = true;
       yamlls.enable = true;
       jinja_lsp = {

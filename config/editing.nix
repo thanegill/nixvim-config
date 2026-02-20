@@ -128,8 +128,6 @@
 
       formatoptions = "tcroqnjp";
 
-      spelloptions = "camel,";
-      spelllang = "en_us,medical";
     };
 
     keymaps = [

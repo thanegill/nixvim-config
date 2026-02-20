@@ -10,6 +10,7 @@
     ./git.nix
     ./lsp.nix
     ./completion.nix
+    ./spelling.nix
   ];
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
