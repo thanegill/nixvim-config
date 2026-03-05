@@ -9,6 +9,7 @@
     ./session.nix
     ./git.nix
     ./lsp.nix
+    ./agent.nix
     ./completion.nix
     ./spelling.nix
   ];
