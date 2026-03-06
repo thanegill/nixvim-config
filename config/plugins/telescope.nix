@@ -32,6 +32,8 @@
       fzf-native.enable = true;
       # https://github.com/nvim-telescope/telescope-ui-select.nvim
       ui-select.enable = true;
+      # https://github.com/debugloop/telescope-undo.nvim
+      undo.enable = true;
     };
 
     # You can put your default mappings / updates / etc. in here
