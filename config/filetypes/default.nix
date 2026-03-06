@@ -25,6 +25,11 @@
     # https://nix-community.github.io/nixvim/plugins/lint/index.html
     # https://github.com/mfussenegger/nvim-lint/
     lint.enable = true;
+
+    # Pretty diagnostics, references, telescope results, quickfix and location list
+    # https://nix-community.github.io/nixvim/plugins/trouble/index.html
+    # https://github.com/folke/trouble.nvim/
+    trouble.enable = true;
   };
 
   extraPlugins = with pkgs.vimPlugins; [
