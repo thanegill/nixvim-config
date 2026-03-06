@@ -53,7 +53,22 @@
       "<leader>/" = { mode = "n"; action = "current_buffer_fuzzy_find"; options = { desc = "[/] fuzzily search in current buffer"; }; };
     };
 
-    settings.extensions.__raw = "{ ['ui-select'] = { require('telescope.themes').get_dropdown() } }";
+    settings = {
+      # Bottom-up larger than default picker for vim.ui.select
+      # get_dropdown defaults:
+      # https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/themes.lua
+      extensions.__raw = ''{ ['ui-select'] = {
+        require('telescope.themes').get_dropdown({
+          sorting_strategy = "descending",
+          layout_config = {
+            prompt_position = "bottom",
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 120)
+            end,
+          },
+        })
+      }}'';
+    };
 
   };
 
