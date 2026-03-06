@@ -1,75 +1,74 @@
 { pkgs, lib, config, ... }: {
 
+  imports = [
+    ./plugins/which-key.nix
+  ];
+
   extraPlugins = [
     pkgs.vimPlugins.readline-vim
   ];
 
-  plugins = {
+  # Adds icons for plugins to utilize in ui
+  plugins.web-devicons.enable = config.hasNerdFont;
 
-    which-key.enable = true;
-
-    # Adds icons for plugins to utilize in ui
-    web-devicons.enable = config.hasNerdFont;
-
-    # https://nix-community.github.io/nixvim/plugins/lualine/index.html
-    # https://github.com/nvim-lualine/lualine.nvim
-    lualine = {
-      enable = true;
-      settings = {
-        options = {
-          icons_enabled = false;
-          theme = "tokyonight";
-          # Disable seperators
-          section_separators = "";
-          component_separators = "";
-          always_show_tabline = true;
-        };
-
-        sections = {
-          lualine_a = [ "mode" ];
-          lualine_b = [ "branch" "diff" "diagnostics" ];
-          lualine_c = [ "filename" "lsp_status" "searchcount" ];
-          lualine_x = [ {
-            __unkeyed-1.__raw = ''
-              function()
-                return require("auto-session.lib").current_session_name(true)
-              end
-            '';
-          } ];
-          lualine_y = [
-            "filetype"
-            {
-              # Display the fileformat section as CRLF instead of icons or
-              # unix/dos/mac
-              __unkeyed-1 = "fileformat";
-              icons_enabled = true;
-              symbols = {
-                unix = "LF";
-                dos = "CRLF";
-                mac = "CR";
-              };
-            }
-            "fileformat"
-            "encoding"
-          ];
-          lualine_z = [ "location" ];
-        };
-        inactive_sections = {
-          lualine_a = [ ];
-          lualine_b = [ ];
-          lualine_c = [ "filename" ];
-          lualine_x = [ "location" ];
-          lualine_y = [ ];
-          lualine_z = [ ];
-        };
-        extensions = let
-          cfgp = config.plugins;
-        in (
-             lib.optional cfgp.fugitive.enable "fugitive"
-          ++ lib.optional cfgp.oil.enable "oil"
-          ++ lib.optional cfgp.neo-tree.enable "neotree"
-        );
+  # https://nix-community.github.io/nixvim/plugins/lualine/index.html
+  # https://github.com/nvim-lualine/lualine.nvim
+  plugins.lualine = {
+    enable = true;
+    settings = {
+      options = {
+        icons_enabled = false;
+        theme = "tokyonight";
+        # Disable seperators
+        section_separators = "";
+        component_separators = "";
+        always_show_tabline = true;
       };
+
+      sections = {
+        lualine_a = [ "mode" ];
+        lualine_b = [ "branch" "diff" "diagnostics" ];
+        lualine_c = [ "filename" "lsp_status" "searchcount" ];
+        lualine_x = [ {
+          __unkeyed-1.__raw = ''
+            function()
+              return require("auto-session.lib").current_session_name(true)
+            end
+          '';
+        } ];
+        lualine_y = [
+          "filetype"
+          {
+            # Display the fileformat section as CRLF instead of icons or
+            # unix/dos/mac
+            __unkeyed-1 = "fileformat";
+            icons_enabled = true;
+            symbols = {
+              unix = "LF";
+              dos = "CRLF";
+              mac = "CR";
+            };
+          }
+          "fileformat"
+          "encoding"
+        ];
+        lualine_z = [ "location" ];
+      };
+      inactive_sections = {
+        lualine_a = [ ];
+        lualine_b = [ ];
+        lualine_c = [ "filename" ];
+        lualine_x = [ "location" ];
+        lualine_y = [ ];
+        lualine_z = [ ];
+      };
+      extensions = let
+        cfgp = config.plugins;
+      in (
+           lib.optional cfgp.fugitive.enable "fugitive"
+        ++ lib.optional cfgp.oil.enable "oil"
+        ++ lib.optional cfgp.neo-tree.enable "neotree"
+      );
     };
   };
 
