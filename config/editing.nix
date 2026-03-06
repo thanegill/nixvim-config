@@ -68,9 +68,15 @@
       #  - sr)'  - [S]urround [R]eplace [)] [']
       vim-surround.enable = true;
 
-      # Preview CSS colors in Vim.
-      # https://nix-community.github.io/nixvim/plugins/vim-css-color/index.html
-      # vim-css-color.enable = true;
+      # Preview colors in Vim.
+      # https://nix-community.github.io/nixvim/plugins/colorizer/index.html
+      # https://github.com/catgoose/nvim-colorizer.lua/
+      colorizer = {
+        enable = true;
+        settings.user_default_options = {
+          names = false;
+        };
+      };
 
       # Adds indentation guides
       # https://nix-community.github.io/nixvim/plugins/indent-blankline/index.html
