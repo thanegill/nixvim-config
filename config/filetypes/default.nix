@@ -18,7 +18,20 @@
 
     # Highlight todo, notes, etc in comments
     # https://nix-community.github.io/nixvim/plugins/todo-comments/index.html
-    todo-comments.enable = true;
+    # https://github.com/folke/todo-comments.nvim/
+    # NOTE: example
+    # INFO: example
+    # TODO: example
+    # HACK: example
+    # WARN: example
+    # TEST: example
+    # PERF: example
+    # FIXME: example
+    todo-comments = {
+      enable = true;
+      # Exclude surround space from keyword from highlight
+      settings.highlight.keyword = "bg";
+    };
 
     # An asynchronous linter plugin for Neovim complementary to the built-in
     # Language Server Protocol support
