@@ -1,5 +1,4 @@
 { ... }: {
-
   imports = [
     ./filetypes
     ./search.nix
@@ -12,6 +11,7 @@
     ./agent.nix
     ./completion.nix
     ./spelling.nix
+    ./diagnostic.nix
   ];
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
@@ -56,31 +56,4 @@
     options.desc = "Exit terminal mode";
   }];
 
-  diagnostic = {
-    settings = {
-      severity_sort = true;
-      signs.__raw = ''
-        {
-          text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚',
-            [vim.diagnostic.severity.WARN] = '󰀪',
-            [vim.diagnostic.severity.INFO] = '󰋽',
-            [vim.diagnostic.severity.HINT] = '󰌶',
-          },
-        }
-      '';
-      float = {
-        border = "rounded";
-        source = true;
-      };
-      virtual_text = {
-        spacing = 2;
-        suffix.__raw = ''
-          function(diagnostic)
-            return string.format(" [%s:%s]", diagnostic.source, diagnostic.code)
-          end
-        '';
-      };
-    };
-  };
 }
