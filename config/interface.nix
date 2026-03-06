@@ -76,7 +76,6 @@
   extraConfigLua = ''
     --  Don't give the intro message when starting.
     vim.opt.shortmess:append("I")
-    vim.opt.fillchars:append("vert:\ ")
   '';
 
   opts = {
@@ -145,11 +144,23 @@
 
   # To see what colorschemes are already installed run `:Telescope colorscheme`.
   # https://nix-community.github.io/nixvim/colorschemes/tokyonight/index.html
+  # https://github.com/folke/tokyonight.nvim/
   colorschemes.tokyonight = {
     enable = true;
     settings = {
       style = "night";
       styles.comments.italic = false;
+    };
+  };
+
+  # Highlight current window separators
+  # https://nix-community.github.io/nixvim/plugins/colorful-winsep/index.html
+  # https://github.com/nvim-zh/colorful-winsep.nvim/
+  plugins.colorful-winsep = {
+    enable = true;
+    settings = {
+      highlight.__raw = ''require("tokyonight.colors").setup().blue'';
+      animate.enabled = false;
     };
   };
 
