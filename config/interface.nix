@@ -150,6 +150,7 @@
     settings = {
       style = "night";
       styles.comments.italic = false;
+      lualine_bold = true;
     };
   };
 
