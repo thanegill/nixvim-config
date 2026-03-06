@@ -114,6 +114,10 @@
     # Keep signcolumn on by default
     signcolumn = "yes";
 
+    # Set `equalalways` to only horizontally match windows, don't adjust
+    # vertical window size.
+    eadirection = "hor";
+
     # Always show tabs
     showtabline = 2;
   };
