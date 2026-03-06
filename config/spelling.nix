@@ -12,8 +12,6 @@
         };
       };
 
-      # https://nix-community.github.io/nixvim/plugins/lsp/servers/harper_ls/index.html
-      harper_ls.enable = true;
       typos_lsp.enable = true;
     };
   };
