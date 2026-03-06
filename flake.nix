@@ -22,7 +22,6 @@
     ];
 
     perSystem = { pkgs, lib, system, ... }: let
-      nixvimLib = inputs.nixvim.lib.${system};
       nixvim' = inputs.nixvim.legacyPackages.${system};
 
       # Use makeNixvimWithModule for proper module support
@@ -52,17 +51,6 @@
           program = "${nvimPackage}/bin/nixvim-print-init";
         };
       };
-
-      # Optional: Add checks back if you want CI validation
-      # checks.default = nixvimLib.check.mkTestDerivationFromNixvimModule nixvimModule;
-      # check = (
-      #   lib.mapAttrs
-      #   (name: module: nixvimLib.check.mkTestDerivationFromNixvimModule {
-      #     inherit name pkgs system module;
-      #   })
-      #   (removeDefault self.nixvimModules)
-      # );
-
       formatter = pkgs.nixfmt-rfc-style;
     };
 

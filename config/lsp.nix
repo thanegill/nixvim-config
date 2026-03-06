@@ -15,7 +15,6 @@
   plugins = {
     lsp-status.enable = true;
     lsp-signature.enable = true;
-    # lspconfig.enable = true;
   };
 
   # https://nix-community.github.io/nixvim/plugins/lsp/index.html
@@ -64,21 +63,9 @@
           completion = {
             callSnippet = "Replace";
           };
-          # diagnostics = {
-          #   disable = [
-          #     "missing-fields"
-          #   ];
-          # };
         };
       };
 
-      # ansiblels.enable = true;
-      # diagnosticls.enable = true;
-      # efm.enable = true;
-      # jqls.enable = true;
-      # statix.enable = true;
-
-      # awk_ls.enable = true;
       bashls.enable = true;
       jsonls.enable = true;
 

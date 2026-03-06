@@ -1,6 +1,7 @@
 {
   # Fuzzy Finder (files, lsp, etc)
   # https://nix-community.github.io/nixvim/plugins/telescope/index.html
+  # https://github.com/nvim-telescope/telescope.nvim
   plugins.telescope = {
     # Telescope is a fuzzy finder that comes with a lot of different things that
     # it can fuzzy find! It's more than just a "file finder", it can search

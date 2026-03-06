@@ -20,6 +20,10 @@
     # https://nix-community.github.io/nixvim/plugins/todo-comments/index.html
     todo-comments.enable = true;
 
+    # An asynchronous linter plugin for Neovim complementary to the built-in
+    # Language Server Protocol support
+    # https://nix-community.github.io/nixvim/plugins/lint/index.html
+    # https://github.com/mfussenegger/nvim-lint/
     lint.enable = true;
   };
 
@@ -39,11 +43,6 @@
     pattern = "gitcommit";
     command = ":DiffGitCached | wincmd p | resize 20";
     desc = "Auto show git diff --cached in horizontal split";
-    # callback.__raw = ''
-    #   function()
-    #     vim.opt.winfixheight = 20;
-    #   end
-    # '';
   }];
 
   extraFiles = {

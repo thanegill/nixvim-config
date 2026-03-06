@@ -9,6 +9,7 @@
 
   config = lib.mkMerge [ {
     plugins = {
+      # Work with several variants of a word at once
       # crc camelCase
       # crp PascalCase
       # crm MixedCase (aka PascalCase)
@@ -65,9 +66,6 @@
       #  - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       #  - sd'   - [S]urround [D]elete [']quotes
       #  - sr)'  - [S]urround [R]eplace [)] [']
-      #mini-surround.enable = true;
-
-      # nvim-surround.enable = true;
       vim-surround.enable = true;
 
       # Preview CSS colors in Vim.

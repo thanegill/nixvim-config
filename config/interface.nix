@@ -74,6 +74,7 @@
   };
 
   extraConfigLua = ''
+    --  Don't give the intro message when starting.
     vim.opt.shortmess:append("I")
     vim.opt.fillchars:append("vert:\ ")
   '';

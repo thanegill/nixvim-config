@@ -10,6 +10,7 @@
 
   # Autoformat
   # https://nix-community.github.io/nixvim/plugins/conform-nvim/index.html
+  # https://github.com/stevearc/conform.nvim/
   plugins.conform-nvim = {
     enable = true;
     settings = {
