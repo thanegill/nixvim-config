@@ -81,16 +81,6 @@
       # https://nix-community.github.io/nixvim/plugins/lastplace/settings.html?highlight=lastpl#pluginslastplacesettings
       lastplace.enable = true;
 
-      # https://nix-community.github.io/nixvim/plugins/hardtime/index.html
-      # https://github.com/m4xshen/hardtime.nvim/
-      hardtime = {
-        enable = true;
-        settings = {
-          restriction_mode = "hint";
-          disable_mouse = false;
-        };
-      };
-
     };
 
     opts = {
@@ -121,39 +111,9 @@
     };
 
     keymaps = [
-      # Disable arrow keys in normal mode
-      {
-        mode = "n";
-        key = "<up>";
-        action = "<cmd>echo 'Use k to move!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<down>";
-        action = "<cmd>echo 'Use j to move!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<left>";
-        action = "<cmd>echo 'Use h to move!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<right>";
-        action = "<cmd>echo 'Use l to move!'<CR>";
-      }
-
       # Reselect on indent/unindented in visual mode.
-      {
-        mode = "v";
-        key = ">";
-        action = ">gv";
-      }
-      {
-        mode = "v";
-        key = "<";
-        action = "<gv";
-      }
+      { mode = "v"; key = ">"; action = ">gv"; }
+      { mode = "v"; key = "<"; action = "<gv"; }
     ];
 
     # Tread hyphenated words as words.
@@ -162,8 +122,7 @@
     '';
   }
 
-  # Search/replace
-  {
+  { # Search/replace
 
     # Preview substitutions live, as you type!
     opts.inccommand = "split";
@@ -199,9 +158,9 @@
     ];
   }
 
-  # Clipboard
-  {
-    keymaps = [{ key = "<leader>pp"; action = ":setlocal paste!"; }];
+  { # Clipboard
+
+    keymaps = [ { key = "<leader>pp"; action = ":setlocal paste!"; } ];
 
     # Disable paste mode when leaving insert mode
     autoCmdGroup.paste.autoCmds = [{
@@ -225,5 +184,27 @@
         end
       '';
     }];
+  }
+
+  { # Help/redirect inefficent keyboard usage
+
+    # https://nix-community.github.io/nixvim/plugins/hardtime/index.html
+    # https://github.com/m4xshen/hardtime.nvim/
+    plugins.hardtime = {
+      enable = true;
+      settings = {
+        restriction_mode = "hint";
+        disable_mouse = false;
+      };
+    };
+
+    # Disable arrow keys in normal mode
+    keymaps = [
+      { mode = "n"; key = "<up>"; action = "<cmd>echo 'Use k to move!'<CR>"; }
+      { mode = "n"; key = "<down>"; action = "<cmd>echo 'Use j to move!'<CR>"; }
+      { mode = "n"; key = "<left>"; action = "<cmd>echo 'Use h to move!'<CR>"; }
+      { mode = "n"; key = "<right>"; action = "<cmd>echo 'Use l to move!'<CR>"; }
+    ];
+
   } ];
 }
