@@ -113,9 +113,6 @@
       # Default textwidth
       textwidth = 80;
 
-      # Preview substitutions live, as you type!
-      inccommand = "split";
-
       # Don't fold by default
       foldenable = false;
 
@@ -125,25 +122,81 @@
 
     keymaps = [
       # Disable arrow keys in normal mode
-      { mode = "n"; key = "<up>"; action = "<cmd>echo 'Use k to move!'<CR>"; }
-      { mode = "n"; key = "<down>"; action = "<cmd>echo 'Use j to move!'<CR>"; }
-      { mode = "n"; key = "<left>"; action = "<cmd>echo 'Use h to move!'<CR>"; }
-      { mode = "n"; key = "<right>"; action = "<cmd>echo 'Use l to move!'<CR>"; }
+      {
+        mode = "n";
+        key = "<up>";
+        action = "<cmd>echo 'Use k to move!'<CR>";
+      }
+      {
+        mode = "n";
+        key = "<down>";
+        action = "<cmd>echo 'Use j to move!'<CR>";
+      }
+      {
+        mode = "n";
+        key = "<left>";
+        action = "<cmd>echo 'Use h to move!'<CR>";
+      }
+      {
+        mode = "n";
+        key = "<right>";
+        action = "<cmd>echo 'Use l to move!'<CR>";
+      }
 
       # Reselect on indent/unindented in visual mode.
-      { mode = "v"; key = ">"; action = ">gv"; }
-      { mode = "v"; key = "<"; action = "<gv"; }
-
-      # Search and replace word under cursor
-      { mode = "n"; key = "\#"; action = '':%s/\<<C-r><C-w>\>//g<Left><Left>''; }
-      # And for visual: https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
-      { mode = "v"; key = "\#"; action = ''""y:%s/<C-r>=escape(@", '/\')<CR>//g<Left><Left>''; }
+      {
+        mode = "v";
+        key = ">";
+        action = ">gv";
+      }
+      {
+        mode = "v";
+        key = "<";
+        action = "<gv";
+      }
     ];
 
     # Tread hyphenated words as words.
     extraConfigLua = ''
       vim.opt.iskeyword:append("-")
     '';
+  }
+
+  # Search/replace
+  {
+
+    # Preview substitutions live, as you type!
+    opts.inccommand = "split";
+
+    keymaps = [
+      {
+        mode = "n";
+        key = "\#";
+        action = ''*:%s/<C-r>///g<Left><Left>'';
+        options.desc = "Search and replace new word under cursor";
+      }
+      # Like "#", but don't put "\<" and "\>" around the word.
+      {
+        mode = "n";
+        key = "g\#";
+        action = ''g*:%s/<C-r>///g<Left><Left>'';
+        options.desc = "Search and replace new text under cursor";
+      }
+      # Like "#", but put the word in the replacement side
+      {
+        mode = "n";
+        key = "gs";
+        action = ''*:%s/<C-r>//<C-r>//g<Left><Left>'';
+        options.desc = "Search and replace old word under cursor";
+      }
+      # And for visual: https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
+      {
+        mode = "v";
+        key = "\#";
+        action = ''""y/<C-r>=escape(@", '/\')<CR>:%s/<C-r>///g<Left><Left>'';
+        options.desc = "Search and replace old word under cursor";
+      }
+    ];
   }
 
   # Clipboard
