@@ -12,7 +12,7 @@
         };
         autoCmds = lib.mkOption {
           type = lib.types.listOf (lib.types.submodule {
-            options = (builtins.removeAttrs lib.nixvim.autocmd.autoCmdOptions [ "group" ]);
+            options = (removeAttrs lib.nixvim.autocmd.autoCmdOptions [ "group" ]);
           });
 
           default = [ ];

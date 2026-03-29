@@ -55,8 +55,7 @@
 
     settings = {
       # Bottom-up larger than default picker for vim.ui.select
-      # get_dropdown defaults:
-      # https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/themes.lua
+      # get_dropdown defaults: https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/themes.lua
       extensions.__raw = ''{ ['ui-select'] = {
         require('telescope.themes').get_dropdown({
           sorting_strategy = "descending",
