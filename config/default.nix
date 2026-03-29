@@ -8,7 +8,7 @@
     ./session.nix
     ./git.nix
     ./lsp.nix
-    ./agent.nix
+    ./agentic-coding.nix
     ./completion.nix
     ./spelling.nix
     ./diagnostic.nix
