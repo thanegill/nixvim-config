@@ -40,8 +40,8 @@
         default = nvimPackage;
         nvim = nvimPackage;
       };
-      apps = rec {
-        default = nvim;
+      apps = {
+        default = self.apps.nvim;
         nvim = {
           type = "app";
           program = lib.getExe nvimPackage;
@@ -63,24 +63,24 @@
         modules = import ./modules;
       };
 
-      nixosModules = rec {
-        default = nixvim;
+      nixosModules = {
+        default = self.nixosModules.nixvim;
         nixvim = args: {
           imports = [ inputs.nixvim.nixosModules.nixvim ];
           programs.nixvim = self.nixvimModules.default args;
         };
       };
 
-      homeModules = rec {
-        default = nixvim;
+      homeModules = {
+        default = self.homeModules.nixvim;
         nixvim = args: {
           imports = [ inputs.nixvim.homeModules.nixvim ];
           programs.nixvim = self.nixvimModules.default args;
         };
       };
 
-      darwinModules = rec {
-        default = nixvim;
+      darwinModules = {
+        default = self.darwinModules.nixvim;
         nixvim = args: {
           imports = [ inputs.nixvim.nixDarwinModules.nixvim ];
           programs.nixvim = self.nixvimModules.default args;
