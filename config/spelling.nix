@@ -8,7 +8,8 @@
         settings.ltex.language = "en-US";
       };
 
-      typos_lsp.enable = true;
+      # https://nix-community.github.io/nixvim/plugins/lsp/servers/harper_ls/index.html
+      # typos_lsp.enable = true;
     };
   };
 
