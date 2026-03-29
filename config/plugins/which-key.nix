@@ -12,7 +12,7 @@
     key = "<leader>?";
     action.__raw = ''
       function()
-        require("which-key").show({ global = false })
+        require("which-key").show()
       end
     '';
     options.desc = "Buffer Local Keymaps (which-key)";
