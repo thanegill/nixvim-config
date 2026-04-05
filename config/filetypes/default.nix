@@ -43,6 +43,10 @@
     # https://nix-community.github.io/nixvim/plugins/trouble/index.html
     # https://github.com/folke/trouble.nvim/
     trouble.enable = true;
+
+    # https://nix-community.github.io/nixvim/plugins/nix/
+    # https://github.com/LnL7/vim-nix/
+    nix.enable = true;
   };
 
   extraPlugins = with pkgs.vimPlugins; [
@@ -51,7 +55,6 @@
     vim-jinja
     vim-markdown
     vim-addon-nix
-    vim-nix
     vim-ps1
     vim-yaml
   ];
