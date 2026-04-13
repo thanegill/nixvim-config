@@ -53,6 +53,8 @@
         };
       };
 
+      rust_analyzer.enable = true;
+
       bashls.enable = true;
       jsonls.enable = true;
 
