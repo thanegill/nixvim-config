@@ -1,96 +1,80 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: lib.mkMerge [
 
-  plugins = {
-    lsp.enable = true;
+  {
+    plugins = {
+      lsp.enable = true;
+    };
 
-    # LSP progress notifications
-    # https://nix-community.github.io/nixvim/plugins/fidget/index.html
-    # https://github.com/j-hui/fidget.nvim
-    fidget.enable = true;
+    # https://nix-community.github.io/nixvim/plugins/lsp/index.html
+    lsp = {
+      inlayHints.enable = true;
+      servers = {
+        # https://nix-community.github.io/nixvim/plugins/lsp/servers/nixd/index.html
+        # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
+        nixd = {
+          enable = true;
+          config = {
+            nixd = {
+              formatting.command = [ "nixfmt" ];
+              # TODO: Configure nix options:
+              # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
+              #
+              # options = {
+              #   nixos.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options'';
+              #   home-manager.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ruixi@k-on".options'';
+              # };
+            };
+          };
+        };
 
-    lsp-status.enable = true;
-    lsp-signature.enable = true;
+        # Lua lsp
+        lua_ls = {
+          enable = true;
 
+          config = {
+            completion = {
+              callSnippet = "Replace";
+            };
+          };
+        };
+
+        # Rust
+        rust_analyzer = {
+          enable = true;
+          settings.check.command = "clippy";
+        };
+        bashls.enable = true;
+        jsonls.enable = true;
+
+        # Python
+        jedi_language_server = {
+          enable = true;
+        };
+        ruff.enable = true;
+        ty.enable = true;
+        pyright.enable = true;
+
+        powershell_es.enable = true;
+
+        vimls.enable = true;
+        yamlls.enable = true;
+        jinja_lsp = {
+          enable = true;
+          package = pkgs.jinja-lsp;
+        };
+      };
+    };
+  }
+
+  { # Keymaps
     # Document existing key chains in which-key
-    which-key.settings.spec = [ {
+    plugins.which-key.settings.spec = [ {
       mode = [ "n" ];
       __unkeyed-1 = "gr";
       group = "LSP";
     } ];
-  };
 
-  # https://nix-community.github.io/nixvim/plugins/lsp/index.html
-  lsp = {
-    servers = {
-      # Nix lsp
-      # https://github.com/oxalica/nil
-      nil_ls = {
-        enable = true;
-        # https://github.com/oxalica/nil/blob/main/docs/configuration.md
-        config = {
-          nil.formatting.command = "nixfmt";
-          nix.flake.autoArchive = false;
-        };
-      };
-
-      nixd = {
-        enable = true;
-        config = {
-          nixd = {
-            formatting.command = [ "nixfmt" ];
-          };
-        };
-      };
-
-      # Lua lsp
-      lua_ls = {
-        enable = true;
-
-        config = {
-          completion = {
-            callSnippet = "Replace";
-          };
-        };
-      };
-
-      # Rust
-      rust_analyzer.enable = true;
-      rls.enable = true;
-
-      bashls.enable = true;
-      jsonls.enable = true;
-
-      # Python
-      jedi_language_server.enable = true;
-      ruff.enable = true;
-      ty.enable = true;
-      pyright.enable = true;
-
-      vimls.enable = true;
-      yamlls.enable = true;
-      jinja_lsp = {
-        enable = true;
-        package = pkgs.jinja-lsp;
-      };
-    };
-
-    keymaps = [
-      {
-        mode = "n";
-        key = "<leader>q";
-        action = "vim.diagnostic.setloclist";
-        options.desc = "Open diagnostic [Q]uickfix list";
-      }
-      {
-        mode = "n";
-        key = "<leader>th";
-        action.__raw = ''
-          function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr })
-          end
-        '';
-        options.desc = "LSP: [T]oggle Inlay [H]ints";
-      }
+    lsp.keymaps = [
       {
         # Find references for the word under your cursor.
         mode = "n";
@@ -107,15 +91,6 @@
         action.__raw = "require('telescope.builtin').lsp_implementations";
         options.desc = "LSP: [G]oto [I]mplementation";
       }
-      # {
-      #   # Jump to the definition of the word under your cursor.
-      #   # This is where a variable was first declared, or where a function is defined, etc.
-      #   # To jump back, press <C-t>.
-      #   mode = "n";
-      #   key = "gd";
-      #   action.__raw = "require('telescope.builtin').lsp_definitions";
-      #   options.desc = "LSP: [G]oto [D]efinition";
-      # }
       {
         # Fuzzy find all the symbols in your current document.
         # Symbols are things like variables, functions, types, etc.
@@ -168,5 +143,5 @@
         options.desc = "Format with LSP";
       }
     ];
-  };
-}
+  }
+]
