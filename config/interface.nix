@@ -95,8 +95,7 @@
     number = true;
     #relativenumber = true;
 
-    # Splits to the right and below
-    splitright = true;
+    # Splits below
     splitbelow = true;
 
     # Show which line your cursor is on.
