@@ -15,7 +15,7 @@
 
   # TODO: Get spellfiles: https://github.com/nix-community/nixvim/pull/3143
   opts = {
-    spelloptions = "camel,";
+    spelloptions = "camel";
     spelllang = "en_us,medical";
   };
 }
