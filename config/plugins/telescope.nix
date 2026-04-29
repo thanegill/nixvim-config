@@ -31,9 +31,29 @@
       # https://github.com/nvim-telescope/telescope-fzf-native.nvim
       fzf-native.enable = true;
       # https://github.com/nvim-telescope/telescope-ui-select.nvim
-      ui-select.enable = true;
+      ui-select = {
+        enable = true;
+
+        # Bottom-up larger than default picker for vim.ui.select
+        # get_dropdown defaults: https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/themes.lua
+        settings.__raw = ''
+          require('telescope.themes').get_dropdown({
+            sorting_strategy = "descending",
+            layout_config = {
+              prompt_position = "bottom",
+              width = function(_, max_columns, _)
+                return math.min(max_columns, 120)
+              end,
+            },
+          })
+        '';
+      };
       # https://github.com/debugloop/telescope-undo.nvim
       undo.enable = true;
+
+      # https://nix-community.github.io/nixvim/plugins/telescope/extensions/live-grep-args/index.html
+      # https://github.com/nvim-telescope/telescope-live-grep-args.nvim
+      live-grep-args.enable = true;
     };
 
     # You can put your default mappings / updates / etc. in here
@@ -52,23 +72,6 @@
       "<leader>s." = { mode = "n"; action = "oldfiles"; options = { desc = "[S]earch Recent Files ('.' for repeat)"; }; };
       "<leader>/" = { mode = "n"; action = "current_buffer_fuzzy_find"; options = { desc = "[/] fuzzily search in current buffer"; }; };
     };
-
-    settings = {
-      # Bottom-up larger than default picker for vim.ui.select
-      # get_dropdown defaults: https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/themes.lua
-      extensions.__raw = ''{ ['ui-select'] = {
-        require('telescope.themes').get_dropdown({
-          sorting_strategy = "descending",
-          layout_config = {
-            prompt_position = "bottom",
-            width = function(_, max_columns, _)
-              return math.min(max_columns, 120)
-            end,
-          },
-        })
-      }}'';
-    };
-
   };
 
   keymaps = [
