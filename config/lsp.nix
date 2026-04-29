@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }: lib.mkMerge [
+{ pkgs, lib, ... }:
+lib.mkMerge [
 
   {
     plugins = {
@@ -9,6 +10,13 @@
     lsp = {
       inlayHints.enable = true;
       servers = {
+        "*".config = {
+          root_markers = [ ".git" ];
+          capabilities.textDocument.semanticTokens = {
+            multilineTokenSupport = true;
+          };
+        };
+
         # https://nix-community.github.io/nixvim/plugins/lsp/servers/nixd/index.html
         # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
         nixd = {
