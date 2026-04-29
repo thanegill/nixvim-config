@@ -5,11 +5,6 @@
   ];
 
   plugins = {
-    # https://nix-community.github.io/nixvim/plugins/femaco/index.html
-    # Edit fenced code blocks in native language
-    # Alternatives
-    # https://github.com/jmbuhr/otter.nvim
-
     yaml-schema-detect.enable = true;
 
     # Detect tabstop and shiftwidth automatically
@@ -58,13 +53,6 @@
     vim-ps1
     vim-yaml
   ];
-
-  autoCmdGroup.gitcommit.autoCmds = [{
-    event = [ "FileType" ];
-    pattern = "gitcommit";
-    command = ":DiffGitCached | wincmd p | resize 20";
-    desc = "Auto show git diff --cached in horizontal split";
-  }];
 
   extraFiles = {
     "after/ftplugin/markown.lua".text = ''
