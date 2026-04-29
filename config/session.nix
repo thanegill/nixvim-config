@@ -53,6 +53,7 @@ lib.mkMerge [
         "terminal"
         "winpos"
         "winsize"
+        "localoptions"
       ];
     };
 
