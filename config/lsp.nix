@@ -152,4 +152,39 @@ lib.mkMerge [
       }
     ];
   }
+
+  {
+    # https://nix-community.github.io/nixvim/plugins/actions-preview/
+    # https://github.com/aznhe21/actions-preview.nvim/
+    plugins.actions-preview = {
+      enable = true;
+      settings = {
+
+        diff.algorithm = "patience";
+
+        telescope = {
+          layout_config = {
+            height = 0.9;
+            preview_cutoff = 20;
+            preview_height.__raw = ''
+              function(_, _, max_lines)
+                return max_lines - 15
+              end
+            '';
+            prompt_position = "top";
+            width = 0.8;
+          };
+          layout_strategy = "vertical";
+          sorting_strategy = "ascending";
+        };
+      };
+    };
+
+    keymaps = [ {
+      key = "gra";
+      action.__raw = ''require("actions-preview").code_actions'';
+      options.desc = "LSP: [G]oto Code [A]ction";
+    } ];
+
+  }
 ]
