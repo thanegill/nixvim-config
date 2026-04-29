@@ -55,18 +55,32 @@
 
       # By default, you may press `<c-space>` to show the documentation.
       # Optionally, set `auto_show = true` to show the documentation after a delay.
-      completion.documentation = {
-        auto_show = true;
-        auto_show_delay_ms = 250;
-      };
+      completion = {
+        documentation = {
+          auto_show = true;
+          auto_show_delay_ms = 250;
+        };
+        ghost_text = {
+          enabled = true;
+          show_without_selection = true;
+        };
+        trigger = {
+          show_on_backspace = true;
+          show_on_backspace_in_keyword = true;
+          show_on_insert = true;
+        };
 
-      completion.trigger = {
-        show_on_backspace = true;
-      };
-
-      completion.ghost_text = {
-        enabled = true;
-        show_without_selection = true;
+        menu.draw.columns = [
+          {
+            __unkeyed-1 = "label";
+            __unkeyed-2 = "label_description";
+            gap = 1;
+          }
+          {
+            __unkeyed-1 = "kind_icon";
+            __unkeyed-2 = "kind";
+          }
+        ];
       };
 
       sources = {
