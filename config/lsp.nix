@@ -49,7 +49,7 @@ lib.mkMerge [
         # Rust
         rust_analyzer = {
           enable = true;
-          settings.check.command = "clippy";
+          config.check.command = "clippy";
         };
         bashls.enable = true;
         jsonls.enable = true;
