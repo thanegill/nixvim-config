@@ -137,14 +137,13 @@
       '';
     }];
 
-    # https://nix-community.github.io/nixvim/NeovimOptions/autoCmd/index.html
     autoCmdGroup.highlight-yank.autoCmds = [{
       # Highlight when yanking (copying) text. See `:help vim.hl.on_yank()`.
       desc = "Highlight when yanking text";
       event = [ "TextYankPost" ];
       callback.__raw = ''
         function()
-          vim.highlight.on_yank({ higroup = 'IncSearch' })
+          vim.hl.on_yank({ higroup = 'IncSearch' })
         end
       '';
     }];
