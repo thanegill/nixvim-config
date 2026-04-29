@@ -1,5 +1,4 @@
-{ pkgs, lib, ... }:
-lib.mkMerge [
+{ pkgs, lib, ... }: lib.mkMerge [
 
   {
     plugins = {
@@ -17,6 +16,8 @@ lib.mkMerge [
           };
         };
 
+        # See `https://nix-community.github.io/nixvim/lsp/servers` for a list of
+        # pre-configured LSPs
 
         # Nix lsp
         # https://github.com/oxalica/nil
@@ -36,13 +37,6 @@ lib.mkMerge [
           config = {
             nixd = {
               formatting.command = [ "nix fmt" ];
-              # TODO: Configure nix options:
-              # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
-              #
-              # options = {
-              #   nixos.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options'';
-              #   home-manager.expr = ''(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ruixi@k-on".options'';
-              # };
             };
           };
         };
@@ -97,7 +91,6 @@ lib.mkMerge [
     lsp.keymaps = [
       {
         # Find references for the word under your cursor.
-        mode = "n";
         key = "grr";
         action.__raw = "require('telescope.builtin').lsp_references";
         options.desc = "LSP: [G]oto [R]eferences";
@@ -106,15 +99,21 @@ lib.mkMerge [
         # Jump to the implementation of the word under your cursor.
         # Useful when your language has ways of declaring types without an
         # actual implementation.
-        mode = "n";
         key = "gri";
         action.__raw = "require('telescope.builtin').lsp_implementations";
         options.desc = "LSP: [G]oto [I]mplementation";
       }
       {
+        # Jump to the definition of the word under your cursor.
+        # This is where a variable was first declared, or where a function is defined, etc.
+        # To jump back, press <C-t>.
+        key = "gd";
+        action.__raw = "require('telescope.builtin').lsp_definitions";
+        options.desc = "LSP: [G]oto [D]efinition";
+      }
+      {
         # Fuzzy find all the symbols in your current document.
         # Symbols are things like variables, functions, types, etc.
-        mode = "n";
         key = "gO";
         action.__raw = "require('telescope.builtin').lsp_document_symbols";
         options.desc = "LSP: Open Document Symbols";
@@ -122,7 +121,6 @@ lib.mkMerge [
       {
         # Fuzzy find all the symbols in your current workspace.
         # Similar to document symbols, except searches over your entire project.
-        mode = "n";
         key = "gW";
         action.__raw = "require('telescope.builtin').lsp_dynamic_workspace_symbols";
         options.desc = "LSP: Open Workspace Symbols";
@@ -131,7 +129,6 @@ lib.mkMerge [
         # Jump to the type of the word under your cursor.
         # Useful when you're not sure what type a variable is and you want to
         # see the definition of its *type*, not where it was *defined*.
-        mode = "n";
         key = "grt";
         action.__raw = "require('telescope.builtin').lsp_type_definitions";
         options.desc = "LSP: [G]oto [T]ype Definition";
@@ -140,12 +137,6 @@ lib.mkMerge [
         key = "grn";
         action = "rename";
         options.desc = "LSP: [R]e[n]ame";
-      }
-      {
-        key = "gra";
-        mode = [ "n" "x" ];
-        lspBufAction = "code_action";
-        options.desc = "LSP: [G]oto Code [A]ction";
       }
       {
         key = "grD";
@@ -159,7 +150,7 @@ lib.mkMerge [
       }
       {
         key = "grq";
-        action = "vim.lsp.buf.formatting";
+        action.__raw = "vim.lsp.buf.format";
         options.desc = "Format with LSP";
       }
     ];
