@@ -20,19 +20,21 @@
   keymaps = [
     {
       mode = "n";
+      key = "gF";
+      action = ":e <cfile><cr>";
+      options.desc = "Create and open a file";
+    }
+    {
+      mode = "n";
       key = "<leader>gcd";
       action = ":Gcd<cr>:pwd<cr>";
-      options = {
-        desc = "Change working directory to the directory of git project root, uses :Gcd from vim-fugitive.";
-      };
+      options.desc = "Change working directory to the directory of git project root, uses :Gcd from vim-fugitive.";
     }
     {
       mode = "n";
       key = "<leader>cd";
       action = ":cd %:p:h<cr>:pwd<cr>";
-      options = {
-        desc = "Change working directory to the directory of the open buffer.";
-      };
+      options.desc = "Change working directory to the directory of the open buffer.";
     }
   ];
 
