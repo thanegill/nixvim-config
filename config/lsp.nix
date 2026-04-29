@@ -17,6 +17,18 @@ lib.mkMerge [
           };
         };
 
+
+        # Nix lsp
+        # https://github.com/oxalica/nil
+        nil_ls = {
+          enable = true;
+          # https://github.com/oxalica/nil/blob/main/docs/configuration.md
+          config = {
+            nil.formatting.command = "nix fmt";
+            nix.flake.autoArchive = false;
+          };
+        };
+
         # https://nix-community.github.io/nixvim/plugins/lsp/servers/nixd/index.html
         # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
         nixd = {
