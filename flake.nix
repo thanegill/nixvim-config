@@ -40,8 +40,8 @@
         default = nvimPackage;
         nvim = nvimPackage;
       };
-      apps = {
-        default = self.apps.nvim;
+      apps = rec {
+        default = nvim;
         nvim = {
           type = "app";
           program = lib.getExe nvimPackage;
@@ -51,7 +51,9 @@
           program = "${nvimPackage}/bin/nixvim-print-init";
         };
       };
-      formatter = pkgs.nixfmt-rfc-style;
+
+
+      formatter = pkgs.nixfmt;
     };
 
     flake = {
