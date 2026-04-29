@@ -23,7 +23,7 @@ lib.mkMerge [
           enable = true;
           config = {
             nixd = {
-              formatting.command = [ "nixfmt" ];
+              formatting.command = [ "nix fmt" ];
               # TODO: Configure nix options:
               # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
               #
