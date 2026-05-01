@@ -59,7 +59,7 @@
     # You can put your default mappings / updates / etc. in here
     # See `:help telescope.builtin`
     keymaps = {
-      "<leader><leader>" = { mode = "n"; action = "find_files"; options = { desc = "[S]earch [F]iles"; }; };
+      "<leader><leader>" = { mode = "n"; action = "find_files hidden=false"; options = { desc = "[S]earch [F]iles"; }; };
       "<leader>sf" = { mode = "n"; action = "find_files"; options = { desc = "[S]earch [F]iles"; }; };
       "<leader>ss" = { mode = "n"; action = "builtin"; options = { desc = "[S]earch [S]elect Telescope"; }; };
       "<leader>sb" = { mode = "n"; action = "buffers"; options = { desc = "[S]earch [B]uffers"; }; };
