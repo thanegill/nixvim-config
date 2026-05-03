@@ -122,6 +122,13 @@
     '';
   }
 
+  { # Move over wrapped lines like single lines by default.
+    keymaps = [
+      { mode = ["n" "v"]; key = "j"; action = "gj"; }
+      { mode = ["n" "v"]; key = "k"; action = "gk"; }
+    ];
+  }
+
   { # Clipboard
 
     keymaps = [ { key = "<leader>pp"; action = ":setlocal paste!"; } ];
