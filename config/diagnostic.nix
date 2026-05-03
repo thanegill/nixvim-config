@@ -39,8 +39,8 @@
     # Show inline hints as italics with under dots.
     # TODO: force should allow this to override and not replace the highlight.
     highlightOverride.LspInlayHint = {
-      # fg = "#545c7e";
-      # bg = "#1d202d";
+      fg = "#545c7e";
+      bg = "#1d202d";
       italic = true;
       underdotted = true;
       force = true;
