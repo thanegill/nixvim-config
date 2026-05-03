@@ -131,7 +131,11 @@
 
   { # Clipboard
 
-    keymaps = [ { key = "<leader>pp"; action = ":setlocal paste!"; } ];
+    keymaps = [ {
+      key = "<leader>pp";
+      action = ":setlocal paste!";
+      options.desc ="Toggle paste mode";
+    } ];
 
     # Disable paste mode when leaving insert mode
     autoCmdGroup.paste.autoCmds = [{
