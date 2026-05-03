@@ -1,10 +1,19 @@
-{ config, ... }: {
+let
+
+# Sets both Normal and Visual modes.
+  mappings = {
+    toggle = "gs";
+    split = "gS";
+    join = "gJ";
+  };
+
+in {
 
   # Alternatives:
-  # https://github.com/nvim-mini/mini.splitjoin
   # https://git.sr.ht/~foosoft/argonaut.nvim
   # https://github.com/AndrewRadev/splitjoin.vim
   # https://github.com/FooSoft/vim-argwrap
+
   plugins = {
     # https://nix-community.github.io/nixvim/plugins/treesj/index.html
     # https://github.com/Wansmer/treesj
@@ -14,15 +23,12 @@
       settings.use_default_keymaps = false;
     };
 
+    # https://nix-community.github.io/nixvim/plugins/mini-splitjoin
+    # https://github.com/nvim-mini/mini.splitjoin
     mini-splitjoin = {
       enable = true;
       settings = {
-        # Sets both Normal and Visual modes.
-        mappings = {
-          toggle = "gs";
-          split = "gS";
-          join = "gj";
-        };
+        inherit mappings;
         detect =  {
           # Allow both `,` and `;` to separate arguments.
           separator = ",;";
@@ -47,20 +53,15 @@
   autoCmd = [{
     desc = "Config treejs on unsupported languages";
     event = [ "FileType" ];
-    callback.__raw = let
-      mSJKeymap = config.plugins.mini-splitjoin.settings.mappings;
-    in ''
+    callback.__raw = ''
       function()
-        local langs = require'treesj.langs'['presets']
+        local langs = require('treesj.langs')['presets']
 
         if langs[vim.bo.filetype] then
           local opts = { buffer = true }
-          vim.keymap.set('n', '${mSJKeymap.toggle}', require("treesj").toggle, opts)
-          vim.keymap.set('v', '${mSJKeymap.toggle}', require("treesj").toggle, opts)
-          vim.keymap.set('n', '${mSJKeymap.split}', require("treesj").split, opts)
-          vim.keymap.set('v', '${mSJKeymap.split}', require("treesj").split, opts)
-          vim.keymap.set('n', '${mSJKeymap.join}', require("treesj").join, opts)
-          vim.keymap.set('v', '${mSJKeymap.join}', require("treesj").join, opts)
+          vim.keymap.set({'n', 'v'}, "${mappings.toggle}", require("treesj").toggle, opts)
+          vim.keymap.set({'n', 'v'}, "${mappings.split}", require("treesj").split, opts)
+          vim.keymap.set({'n', 'v'}, "${mappings.join}", require("treesj").join, opts)
         end
       end
     '';
