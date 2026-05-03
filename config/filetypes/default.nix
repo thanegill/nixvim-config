@@ -2,6 +2,7 @@
 
   imports = [
     ../plugins/treesitter.nix
+    ../plugins/lint.nix
   ];
 
   plugins = {
@@ -28,12 +29,6 @@
       settings.highlight.keyword = "bg";
     };
 
-    # An asynchronous linter plugin for Neovim complementary to the built-in
-    # Language Server Protocol support
-    # https://nix-community.github.io/nixvim/plugins/lint/index.html
-    # https://github.com/mfussenegger/nvim-lint/
-    lint.enable = true;
-
     # Pretty diagnostics, references, telescope results, quickfix and location list
     # https://nix-community.github.io/nixvim/plugins/trouble/index.html
     # https://github.com/folke/trouble.nvim/
@@ -42,6 +37,7 @@
     # https://nix-community.github.io/nixvim/plugins/nix/
     # https://github.com/LnL7/vim-nix/
     nix.enable = true;
+
   };
 
   extraPlugins = with pkgs.vimPlugins; [
