@@ -36,6 +36,12 @@
       nvimPackage = mkPackage pkgs.neovim-unwrapped;
 
     in {
+
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
       packages = {
         default = nvimPackage;
         nvim = nvimPackage;
