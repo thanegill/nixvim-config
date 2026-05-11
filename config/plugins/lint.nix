@@ -14,7 +14,7 @@
         # "vale"
       ];
       gitcommit = [
-        "commitlint"
+        "gitlint"
       ];
       python = [
         "ruff"
