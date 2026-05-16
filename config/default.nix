@@ -25,6 +25,8 @@
 
   editorconfig.enable = true;
 
+  plugins.firenvim.enable = true;
+
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#opts
   opts = {
 
