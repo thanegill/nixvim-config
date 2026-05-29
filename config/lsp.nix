@@ -3,6 +3,11 @@
   {
     plugins = {
       lsp.enable = true;
+
+      # schemastore enables yamlls and jsonls lsp with schema definitions.
+      # https://nix-community.github.io/nixvim/plugins/schemastore/
+      # https://github.com/b0o/SchemaStore.nvim
+      schemastore.enable = true;
     };
 
     # https://nix-community.github.io/nixvim/plugins/lsp/index.html
@@ -57,8 +62,8 @@
           enable = true;
           config.check.command = "clippy";
         };
+
         bashls.enable = true;
-        jsonls.enable = true;
 
         # Python
         jedi_language_server = {
@@ -71,7 +76,10 @@
         powershell_es.enable = true;
 
         vimls.enable = true;
+
         yamlls.enable = true;
+        jsonls.enable = true;
+
         jinja_lsp = {
           enable = true;
           package = pkgs.jinja-lsp;
