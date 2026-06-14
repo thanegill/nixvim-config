@@ -11,7 +11,6 @@ There is no test suite. After changing config, run `nix build` to confirm it sti
 ## Gotchas
 
 - Files under `config/plugins/` are **not** auto-discovered — a new file there does nothing until a feature file `imports` it.
-- `config/agentic-coding.nix` is currently commented out of the imports in `config/default.nix`.
 
 ## Conventions
 
