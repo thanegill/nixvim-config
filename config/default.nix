@@ -60,4 +60,19 @@
     options.desc = "Exit terminal mode";
   }];
 
+  userCommands.Preview = {
+    desc = "Open buffer (or given path) in default application";
+    nargs = "?";
+    command.__raw = ''
+      function(opts)
+        -- `opts.args` is "" (not nil) when no argument is given, so fall back
+        -- to the current buffer's name explicitly.
+        local target = (opts.args ~= "") and opts.args
+          or vim.api.nvim_buf_get_name(0)
+        vim.ui.open(target)
+      end
+    '';
+    # TODO: option to open in a specific application (e.g. Marked 2 via
+    # `open -b com.brettterpstra.marked2`).
+  };
 }
