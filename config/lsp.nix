@@ -61,6 +61,8 @@
         };
 
         # Rust
+        # https://nix-community.github.io/nixvim/plugins/lsp/servers/rust_analyzer/
+        # https://rust-analyzer.github.io/book/
         rust_analyzer = {
           enable = true;
           config.check.command = "clippy";
