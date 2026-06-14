@@ -22,6 +22,7 @@
     ];
 
     perSystem = { pkgs, lib, system, ... }: let
+      nixvimLib = inputs.nixvim.lib.${system};
       nixvim' = inputs.nixvim.legacyPackages.${system};
 
       # Use makeNixvimWithModule for proper module support
@@ -58,6 +59,11 @@
         };
       };
 
+      # Builds the full config and runs nvim headless to confirm it loads.
+      checks.default = nixvimLib.check.mkTestDerivationFromNixvimModule {
+        inherit pkgs;
+        module = self.nixvimModules.default;
+      };
 
       formatter = pkgs.nixfmt;
     };

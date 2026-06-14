@@ -24,6 +24,11 @@
 
   editorconfig.enable = true;
 
+  # nixvim (26.11) tracks a different release than our nixos-unstable nixpkgs
+  # (26.05). The mismatch is expected for this setup; silence the release-check
+  # warning so `nix flake check` (whose test fails on any warning) passes.
+  version.enableNixpkgsReleaseCheck = false;
+
   # firenvim is disabled for now; see TODO.md — it wants its own dedicated config
   # that sets a firenvim-specific theme/options without fighting the main
   # colorscheme.

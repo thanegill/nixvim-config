@@ -6,7 +6,7 @@ See [`README.md`](README.md) for what this project is, the build/run commands, a
 
 ## Verifying changes
 
-There is no test suite. After changing config, run `nix build` to confirm it still evaluates before claiming success. `nix flake check` only evaluates the flake — the nixvim test checks are commented out in `flake.nix`.
+There is no unit-test suite, but `flake.nix` defines `checks.default`, which builds the full config and runs nvim headless to confirm it loads. After changing config, run `nix build` (fast) or `nix flake check` (also runs the headless check) to confirm it still works before claiming success.
 
 ## Gotchas
 
