@@ -55,6 +55,8 @@
       #  - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       #  - sd'   - [S]urround [D]elete [']quotes
       #  - sr)'  - [S]urround [R]eplace [)] [']
+      # TODO: decide between vim-surround (current), mini-surround, and
+      # nvim-surround, then drop the other two.
       vim-surround.enable = true;
 
       # Preview colors in Vim.
