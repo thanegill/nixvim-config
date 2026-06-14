@@ -1,12 +1,10 @@
-{ pkgs, ... }: {
+{ ... }: {
 
   plugins.lsp = {
     servers = {
-      ltex_plus = {
-        enable = true;
-        package = pkgs.ltex-ls-plus;
-        settings.ltex.language = "en-US";
-      };
+      # TODO: re-enable the ltex_plus LSP (grammar/spell check via
+      # pkgs.ltex-ls-plus) once it works under firenvim:
+      # https://github.com/glacambre/firenvim/issues/1540
 
       # https://nix-community.github.io/nixvim/plugins/lsp/servers/harper_ls/index.html
       # typos_lsp.enable = true;
