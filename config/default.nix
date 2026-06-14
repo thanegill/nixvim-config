@@ -24,7 +24,9 @@
 
   editorconfig.enable = true;
 
-  plugins.firenvim.enable = true;
+  # firenvim is disabled for now; see TODO.md — it wants its own dedicated config
+  # that sets a firenvim-specific theme/options without fighting the main
+  # colorscheme.
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#opts
   opts = {
