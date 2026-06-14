@@ -32,6 +32,18 @@
       bash = [
         "shellcheck"
       ];
+      dockerfile = [
+        "hadolint"
+      ];
+      ruby = [
+        "ruby"
+      ];
+      terraform = [
+        "tflint"
+      ];
+      text = [
+        "vale"
+      ];
       # json = [ "jsonlint" ]; # Not packaged yet
     };
   };
