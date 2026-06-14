@@ -16,39 +16,20 @@ lib.mkMerge [
           end
         '';
         bypass_save_filetypes = [ "oil" "gitcommit" ];
-        # Only save the session if there are at least two windows with buffers
-        # backed by normal files.
-        # https://github.com/rmagatti/auto-session/wiki/Argument-Handling
-        args_allow_files_auto_save.__raw = ''
-          function()
-            local supported = 0
-
-            local tabpages = vim.api.nvim_list_tabpages()
-            for _, tabpage in ipairs(tabpages) do
-              local windows = vim.api.nvim_tabpage_list_wins(tabpage)
-              for _, window in ipairs(windows) do
-                local buffer = vim.api.nvim_win_get_buf(window)
-                local file_name = vim.api.nvim_buf_get_name(buffer)
-                if vim.fn.filereadable(file_name) ~= 0 then
-                  supported = supported + 1
-                end
-              end
-            end
-
-            -- If we have 2 or more windows with supported buffers, save the session
-            return supported >= 2
-          end
-        '';
+        close_filetypes_on_save = [ "checkhealth" "gitcommit" ];
+        # FIXME: gitcommit (COMMIT_EDITMSG / GIT_COMMIT) buffers are still being
+        # restored into recovered sessions, despite "gitcommit" being listed in
+        # both bypass_save_filetypes and close_filetypes_on_save.
       };
     };
 
     opts = {
       sessionoptions = [
-        "blank"
+        # "blank"
         "buffers"
         "curdir"
         "folds"
-        "help"
+        # "help"
         "tabpages"
         "terminal"
         "winpos"
