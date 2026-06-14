@@ -6,6 +6,10 @@
   ];
 
   plugins = {
+    # Seamless navigation between nvim splits and kitty windows.
+    # NOTE: requires the kitty side wired up (kitty.conf + kittens). See TODO.md.
+    # https://nix-community.github.io/nixvim/plugins/kitty-navigator/index.html
+    # https://github.com/knubie/vim-kitty-navigator/
     kitty-navigator.enable = true;
 
     # https://nix-community.github.io/nixvim/plugins/oil/index.html?highlight=oil#oil
