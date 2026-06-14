@@ -51,7 +51,7 @@
   ];
 
   extraFiles = {
-    "after/ftplugin/markown.lua".text = ''
+    "after/ftplugin/markdown.lua".text = ''
       vim.opt_local.wrap = true
       vim.opt_local.shiftwidth = 2
       vim.opt_local.expandtab = true
