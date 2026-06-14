@@ -37,6 +37,20 @@
       action = ":cd %:p:h<cr>:pwd<cr>";
       options.desc = "Change working directory to the directory of the open buffer.";
     }
+    {
+      mode = "n";
+      key = "gX";
+      action.__raw = ''
+        function()
+          local query = vim.fn.expand("<cword>")
+          if query == "" then
+            return
+          end
+          vim.ui.open("https://kagi.com/search?q=" .. vim.uri_encode(query))
+        end
+      '';
+      options.desc = "Search word under cursor in browser (Kagi)";
+    }
   ];
 
   # When moving through the jumplist, |changelist|, |alternate-file| or using
