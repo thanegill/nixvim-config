@@ -6,11 +6,24 @@
   ];
 
   plugins = {
+    # lz.n lazy-loading provider (also backs session.nix's oil lazyLoad).
+    lz-n.enable = true;
+
     # Seamless navigation between nvim splits and kitty windows.
     # NOTE: requires the kitty side wired up (kitty.conf + kittens). See TODO.md.
+    # Lazy-loaded on its KittyNavigate* commands so it isn't sourced at startup:
+    # it shells out to `kitten`, which isn't available in headless/CI builds.
     # https://nix-community.github.io/nixvim/plugins/kitty-navigator/index.html
     # https://github.com/knubie/vim-kitty-navigator/
-    kitty-navigator.enable = true;
+    kitty-navigator = {
+      enable = true;
+      lazyLoad.settings.cmd = [
+        "KittyNavigateLeft"
+        "KittyNavigateDown"
+        "KittyNavigateUp"
+        "KittyNavigateRight"
+      ];
+    };
   };
 
   opts = {
