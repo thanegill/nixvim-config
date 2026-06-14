@@ -11,9 +11,6 @@
     # https://nix-community.github.io/nixvim/plugins/kitty-navigator/index.html
     # https://github.com/knubie/vim-kitty-navigator/
     kitty-navigator.enable = true;
-
-    # https://nix-community.github.io/nixvim/plugins/oil/index.html?highlight=oil#oil
-    # File explorer: edit your filesystem like a buffer.
   };
 
   opts = {
