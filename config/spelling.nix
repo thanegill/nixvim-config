@@ -2,12 +2,19 @@
 
   plugins.lsp = {
     servers = {
-      # TODO: re-enable the ltex_plus LSP (grammar/spell check via
-      # pkgs.ltex-ls-plus) once it works under firenvim:
-      # https://github.com/glacambre/firenvim/issues/1540
-
+      # Grammar + spell checking for code (comments/strings) and prose, with
+      # code-action corrections — the LSP replacement for native :spell.
       # https://nix-community.github.io/nixvim/plugins/lsp/servers/harper_ls/index.html
-      # typos_lsp.enable = true;
+      # https://github.com/Automattic/harper/
+      harper_ls.enable = true;
+
+      # Low-noise typo detection for code (identifiers/comments).
+      # https://github.com/tekumara/typos-lsp/
+      typos_lsp.enable = true;
+
+      # TODO: ltex_plus (LanguageTool grammar via pkgs.ltex-ls-plus) is the
+      # heavyweight alternative; it broke under firenvim, see:
+      # https://github.com/glacambre/firenvim/issues/1540
     };
   };
 
