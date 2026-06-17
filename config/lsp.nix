@@ -89,6 +89,18 @@
           enable = true;
           package = pkgs.jinja-lsp;
         };
+
+        # TypeScript / JavaScript
+        ts_ls.enable = true;
+
+        # Ansible playbooks / roles
+        ansiblels.enable = true;
+
+        # jq
+        jqls.enable = true;
+
+        # AWK
+        awk_ls.enable = true;
       };
     };
   }
