@@ -58,6 +58,12 @@
       vim.opt_local.wrap = true
       vim.opt_local.shiftwidth = 2
       vim.opt_local.expandtab = true
+      -- Prose-friendly soft wrapping (no hard textwidth, wrap at word breaks
+      -- with matching indent, and don't render listchars).
+      vim.opt_local.linebreak = true
+      vim.opt_local.breakindent = true
+      vim.opt_local.list = false
+      vim.opt_local.textwidth = 0
     '';
 
     "after/ftplugin/jinja.lua".text = ''

@@ -11,7 +11,6 @@
   review against the current completion plugin
 - Spell mappings: toggle (`<leader>ss`), next/prev (`]s`/`[s`), add-to-dict
   (`zg`), suggest (`z=`)
-- Markdown ftplugin: also set `linebreak`/`breakindent`/`nolist`/`spell`/`textwidth=0`
 
 ## Plugins to evaluate
 - firenvim — disabled for now. Re-enable behind its own dedicated config/module
