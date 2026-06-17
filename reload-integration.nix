@@ -48,6 +48,48 @@ in
 {
   inherit reloadWrap;
 
+  # Flake checks for the feature. `configuredNvim` is the makeNixvimWithModule
+  # result (the editor with config baked in, before reloadWrap).
+  mkChecks = pkgs: configuredNvim: {
+    # Relaunch-loop shell logic: exiting 77 must re-exec the `nvim` on PATH with
+    # NIXVIM_RELOADED=1 and arguments dropped; any other exit code passes
+    # straight through. Uses a stub "nvim" that exits 77 once then 0.
+    reload-wrapper =
+      let
+        stub = pkgs.writeShellScriptBin "nvim" ''
+          n=$(cat "$STUB_COUNT" 2>/dev/null || echo 0)
+          printf 'run=%s args=[%s] reloaded=%s\n' "$((n + 1))" "$*" "''${NIXVIM_RELOADED:-unset}" >> "$STUB_LOG"
+          echo "$((n + 1))" > "$STUB_COUNT"
+          if [ "$n" = 0 ]; then exit 77; else exit 0; fi
+        '';
+        wrapped = reloadWrap pkgs stub;
+      in
+      pkgs.runCommand "reload-wrapper-test" { } ''
+        tmp=$(mktemp -d)
+        export STUB_COUNT="$tmp/count" STUB_LOG="$tmp/log"
+        export PATH="${wrapped}/bin:$PATH"
+        "${wrapped}/bin/nvim" the-file.txt
+        echo "=== invocation log ==="; cat "$STUB_LOG"
+        grep -qxF 'run=1 args=[the-file.txt] reloaded=unset' "$STUB_LOG" \
+          || { echo "FAIL: first run should pass args through with no NIXVIM_RELOADED"; exit 1; }
+        grep -qxF 'run=2 args=[] reloaded=1' "$STUB_LOG" \
+          || { echo "FAIL: exit 77 should relaunch via PATH with args dropped and NIXVIM_RELOADED=1"; exit 1; }
+        [ "$(wc -l < "$STUB_LOG")" = 2 ] \
+          || { echo "FAIL: expected exactly 2 invocations (no extra relaunch on exit 0)"; exit 1; }
+        echo PASS; touch "$out"
+      '';
+
+    # The config (modules/reload.nix) must register the SIGUSR1 handler: a Signal
+    # autocmd in the reload-config group. Asserted headlessly.
+    reload-handler = pkgs.runCommand "reload-handler-test" { } ''
+      export HOME=$(mktemp -d)
+      "${configuredNvim}/bin/nvim" --headless -i NONE \
+        +'lua local n = #vim.api.nvim_get_autocmds({ event = "Signal", group = "reload-config" }); if n < 1 then io.stderr:write("FAIL: no reload-config Signal autocmd registered\n"); vim.cmd("cquit 1") end' \
+        +'qall!'
+      echo PASS; touch "$out"
+    '';
+  };
+
   systemModule =
     {
       config,
