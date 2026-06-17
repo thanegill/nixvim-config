@@ -202,8 +202,11 @@
         darwinModules = {
           default = self.darwinModules.nixvim;
           # nix-darwin has no custom named activation scripts; append to the
-          # built-in postActivation. macOS ships /usr/bin/pkill (procps is
-          # Linux-only, so it is not referenced here).
+          # built-in postActivation. NOTE: this module is also borrowed on NixOS
+          # (see ../nixos-config: upstream nixvim's nixosModules wrapper doesn't
+          # declare programs.nixvim.*), where `postActivation` is just a normal
+          # activation script — so the hook must work on Linux too, hence the
+          # platform-aware pkill path rather than a hardcoded /usr/bin/pkill.
           nixvim =
             {
               pkgs,
@@ -222,8 +225,11 @@
                 (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
               ];
 
+              # procps is Linux-only; macOS ships /usr/bin/pkill.
               system.activationScripts.postActivation.text = lib.mkAfter ''
-                /usr/bin/pkill -USR1 nvim || true
+                ${
+                  if pkgs.stdenv.hostPlatform.isDarwin then "/usr/bin/pkill" else lib.getExe' pkgs.procps "pkill"
+                } -USR1 nvim || true
               '';
             };
         };
