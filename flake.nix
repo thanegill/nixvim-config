@@ -150,16 +150,19 @@
           default = self.homeModules.nixvim;
           # `lib.hm.dag` is only in scope from the home-manager module args.
           nixvim =
-            { lib, ... }@args:
+            { lib, pkgs, ... }@args:
             {
               imports = [ inputs.nixvim.homeModules.nixvim ];
               programs.nixvim = self.nixvimModules.default args;
 
               # Signal running nvim instances to reload after switching generations.
-              # `pkill` is resolved from PATH so this stays cross-platform (procps is
-              # Linux-only); `|| true` so a no-match exit doesn't fail activation.
+              # The home-manager activation PATH is minimal and has no `pkill`, so
+              # reference it absolutely. procps is Linux-only; macOS ships its own.
+              # `|| true` so a no-match exit (no nvim running) doesn't fail activation.
               home.activation.reloadNvim = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-                pkill -USR1 nvim || true
+                ${
+                  if pkgs.stdenv.hostPlatform.isDarwin then "/usr/bin/pkill" else lib.getExe' pkgs.procps "pkill"
+                } -USR1 nvim || true
               '';
             };
         };
