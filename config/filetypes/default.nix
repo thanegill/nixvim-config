@@ -50,11 +50,22 @@
     vim-yaml
   ];
 
+  # Treat *.tpl files as jinja templates (vim-jinja + jinja_lsp handle the rest).
+  filetype.extension.tpl = "jinja";
+
   extraFiles = {
     "after/ftplugin/markdown.lua".text = ''
       vim.opt_local.wrap = true
       vim.opt_local.shiftwidth = 2
       vim.opt_local.expandtab = true
+    '';
+
+    "after/ftplugin/jinja.lua".text = ''
+      vim.opt_local.commentstring = "{# %s #}"
+      vim.opt_local.expandtab = true
+      vim.opt_local.shiftwidth = 2
+      vim.opt_local.tabstop = 2
+      vim.opt_local.softtabstop = 2
     '';
 
     "after/ftplugin/nix.lua".text = ''

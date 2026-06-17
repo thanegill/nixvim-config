@@ -2,7 +2,6 @@
 
 ## Migrate from vim config (from the old vimrc)
 - backup and undo dirs (`backup`/`undo` under files?)
-- Jinja filetype: map `*.tpl` -> jinja, commentstring `{# %s #}`, 2-space indent
 - Add netrw to jumplist (on `BufLeave` run `normal! m'`)
 - Close-all-buffers mapping (was `<leader>bxa`)
 - `<leader>te`: tabedit in the current buffer's directory
