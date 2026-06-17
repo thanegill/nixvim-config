@@ -26,6 +26,14 @@
     # See `:help telescope` and `:help telescope.setup()`
     enable = true;
 
+    # Manage buffers from the `<leader>sb` buffers picker: `d` (normal) /
+    # `<C-d>` (insert) deletes the highlighted buffer. Combine with `<Tab>`
+    # multi-select to close several (or all) buffers at once.
+    settings.pickers.buffers.mappings = {
+      n."d".__raw = "require('telescope.actions').delete_buffer";
+      i."<C-d>".__raw = "require('telescope.actions').delete_buffer";
+    };
+
     # Enable Telescope extensions
     extensions = {
       # https://github.com/nvim-telescope/telescope-fzf-native.nvim

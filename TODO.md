@@ -2,7 +2,6 @@
 
 ## Migrate from vim config (from the old vimrc)
 - backup and undo dirs (`backup`/`undo` under files?)
-- Close-all-buffers mapping (was `<leader>bxa`)
 - `<leader>te`: tabedit in the current buffer's directory
 - Folding: `foldmethod=indent`, `foldnestmax=3`
 - Tab-completion behaviour (old `Inserttabwrapper` / `completeopt` / `<s-tab>`) —
