@@ -14,15 +14,10 @@
   #   '';
   # }];
 
-  # gitcommit buffers: spell-check the message, and strip trailing whitespace on
-  # save (reusing whitespace-nvim's trim, see config/plugins/whitespace.nix).
+  # Trim trailing whitespace from commit messages on save (reusing
+  # whitespace-nvim's trim, see config/plugins/whitespace.nix). Spell/grammar is
+  # handled by harper_ls, which attaches to the gitcommit filetype.
   autoCmdGroup.gitcommit.autoCmds = [
-    {
-      desc = "Enable spell for git commit messages";
-      event = [ "FileType" ];
-      pattern = "gitcommit";
-      command = "setlocal spell";
-    }
     {
       desc = "Trim trailing whitespace in commit messages on save";
       event = [ "BufWritePre" ];
