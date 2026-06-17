@@ -14,7 +14,7 @@
   # TODO: Get spellfiles: https://github.com/nix-community/nixvim/pull/3143
   opts = {
     spelloptions = "camel";
-    spelllang = "en_us,medical";
+    spelllang = "en_us";
   };
 
   # The `]s`/`[s` (next/prev), `zg` (add-to-dict) and `z=` (suggest) motions are
