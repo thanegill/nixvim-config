@@ -14,6 +14,48 @@
 
       removeDefault = attrs: removeAttrs attrs [ "default" ];
 
+      # Wrap a Neovim package so `nvim` runs in a relaunch loop: exiting with code
+      # 77 (the SIGUSR1 handler in config/reload.nix runs `cquit 77`) makes it
+      # re-exec the `nvim` on PATH. After a `switch` that profile symlink points at
+      # the new generation, so this is how a running editor picks up a rebuilt
+      # config — `:restart` can't, because it replays the pinned vim-pack-dir store
+      # path baked into v:argv. Arguments are dropped on relaunch so auto-session
+      # restores the saved session for the cwd instead of reopening file arguments
+      # (auto-session skips restore when launched with files). NIXVIM_RELOADED lets
+      # the new instance show a "reloaded" notification (see config/reload.nix).
+      #
+      # Used both for the standalone package (`packages.default`) and, via the
+      # consumer wrappers below, to shadow the module-installed nvim so the loop is
+      # what actually lands on PATH.
+      reloadWrap =
+        pkgs: nvim:
+        let
+          reloadLoop = pkgs.writeShellScript "nvim-reload-loop" ''
+            "${nvim}/bin/nvim" "$@"
+            code=$?
+            [ "$code" = 77 ] || exit "$code"
+            export NIXVIM_RELOADED=1
+            if command -v nvim > /dev/null 2>&1; then
+              exec nvim
+            else
+              exec "${nvim}/bin/nvim"
+            fi
+          '';
+        in
+        pkgs.symlinkJoin {
+          name = "nvim";
+          paths = [ nvim ];
+          # Replace the wrapped nvim with the relaunch loop; keep every other output
+          # (e.g. bin/nixvim-print-init) from the underlying package.
+          postBuild = ''
+            rm "$out/bin/nvim"
+            ln -s ${reloadLoop} "$out/bin/nvim"
+          '';
+          meta = (nvim.meta or { }) // {
+            mainProgram = "nvim";
+          };
+        };
+
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
 
@@ -35,53 +77,19 @@
           nixvimLib = inputs.nixvim.lib.${system};
           nixvim' = inputs.nixvim.legacyPackages.${system};
 
-          # Use makeNixvimWithModule for proper module support
+          # Use makeNixvimWithModule for proper module support, then wrap it in the
+          # relaunch loop (see reloadWrap above).
           mkPackage =
             package:
-            let
-              nixvim = nixvim'.makeNixvimWithModule {
+            reloadWrap pkgs (
+              nixvim'.makeNixvimWithModule {
                 inherit pkgs;
                 module = {
                   imports = [ self.nixvimModules.default ];
                   inherit package;
                 };
-              };
-
-              # Relaunch wrapper. nvim normally runs the pinned build, but exiting with
-              # code 77 (the SIGUSR1 handler in config/reload.nix runs `cquit 77`) makes
-              # it re-exec the `nvim` on PATH. After a `switch` that profile symlink
-              # points at the new generation, so this is how a running editor picks up a
-              # rebuilt config — `:restart` can't, because it replays the pinned
-              # vim-pack-dir store path baked into v:argv. Arguments are dropped on
-              # relaunch so auto-session restores the saved session for the cwd instead
-              # of reopening file arguments (auto-session skips restore when launched
-              # with files). NIXVIM_RELOADED lets the new instance show a "reloaded"
-              # notification (see config/reload.nix).
-              reloadLoop = pkgs.writeShellScript "nvim-reload-loop" ''
-                "${nixvim}/bin/nvim" "$@"
-                code=$?
-                [ "$code" = 77 ] || exit "$code"
-                export NIXVIM_RELOADED=1
-                if command -v nvim > /dev/null 2>&1; then
-                  exec nvim
-                else
-                  exec "${nixvim}/bin/nvim"
-                fi
-              '';
-            in
-            pkgs.symlinkJoin {
-              name = "nvim";
-              paths = [ nixvim ];
-              # Replace the wrapped nvim with the relaunch loop; keep every other output
-              # (e.g. bin/nixvim-print-init) from the underlying package.
-              postBuild = ''
-                rm "$out/bin/nvim"
-                ln -s ${reloadLoop} "$out/bin/nvim"
-              '';
-              meta = (nixvim.meta or { }) // {
-                mainProgram = "nvim";
-              };
-            };
+              }
+            );
 
           nvimPackage = mkPackage pkgs.neovim-unwrapped;
 
@@ -132,10 +140,22 @@
         nixosModules = {
           default = self.nixosModules.nixvim;
           nixvim =
-            { pkgs, ... }@args:
+            {
+              pkgs,
+              lib,
+              config,
+              ...
+            }@args:
             {
               imports = [ inputs.nixvim.nixosModules.nixvim ];
               programs.nixvim = self.nixvimModules.default args;
+
+              # Install the relaunch-loop wrapper at higher priority so it shadows
+              # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
+              # reloads work) would only exist in `packages.default`, not here.
+              environment.systemPackages = [
+                (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
+              ];
 
               # Tell running nvim instances to reload (SIGUSR1 -> config/reload.nix)
               # once the new generation is in place. `|| true` keeps activation from
@@ -150,10 +170,22 @@
           default = self.homeModules.nixvim;
           # `lib.hm.dag` is only in scope from the home-manager module args.
           nixvim =
-            { lib, pkgs, ... }@args:
+            {
+              lib,
+              pkgs,
+              config,
+              ...
+            }@args:
             {
               imports = [ inputs.nixvim.homeModules.nixvim ];
               programs.nixvim = self.nixvimModules.default args;
+
+              # Install the relaunch-loop wrapper at higher priority so it shadows
+              # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
+              # reloads work) would only exist in `packages.default`, not here.
+              home.packages = [
+                (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
+              ];
 
               # Signal running nvim instances to reload after switching generations.
               # The home-manager activation PATH is minimal and has no `pkill`, so
@@ -173,10 +205,22 @@
           # built-in postActivation. macOS ships /usr/bin/pkill (procps is
           # Linux-only, so it is not referenced here).
           nixvim =
-            { lib, ... }@args:
+            {
+              pkgs,
+              lib,
+              config,
+              ...
+            }@args:
             {
               imports = [ inputs.nixvim.nixDarwinModules.nixvim ];
               programs.nixvim = self.nixvimModules.default args;
+
+              # Install the relaunch-loop wrapper at higher priority so it shadows
+              # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
+              # reloads work) would only exist in `packages.default`, not here.
+              environment.systemPackages = [
+                (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
+              ];
 
               system.activationScripts.postActivation.text = lib.mkAfter ''
                 /usr/bin/pkill -USR1 nvim || true
