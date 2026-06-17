@@ -100,6 +100,21 @@
         desc = "[S]earch [/] in Open Files";
       };
     }
+    {
+      # Find files scoped to the current buffer's directory (replaces the old
+      # vimrc `<leader>te` tabedit-in-buffer-dir mapping).
+      mode = "n";
+      key = "<leader>te";
+      action.__raw = ''
+        function()
+          require('telescope.builtin').find_files {
+            cwd = vim.fn.expand('%:p:h'),
+            prompt_title = "Files in buffer's directory",
+          }
+        end
+      '';
+      options.desc = "[T]elescope [E]dit in buffer's dir";
+    }
   ];
 
   # Document existing key chains in which-key
