@@ -16,4 +16,23 @@
     spelloptions = "camel";
     spelllang = "en_us,medical";
   };
+
+  # The `]s`/`[s` (next/prev), `zg` (add-to-dict) and `z=` (suggest) motions are
+  # Vim built-ins, so only a toggle is needed. (`<leader>ss` is taken by
+  # telescope [S]earch [S]elect; this lives under the [T]oggle group instead.)
+  keymaps = [{
+    mode = "n";
+    key = "<leader>ts";
+    action = "<cmd>setlocal spell!<CR>";
+    options.desc = "[T]oggle [S]pell";
+  }];
+
+  # Enable spell checking automatically for prose filetypes. (gitcommit is
+  # handled in config/git.nix alongside its other tweaks.)
+  autoCmdGroup.spell.autoCmds = [{
+    desc = "Enable spell for prose filetypes";
+    event = [ "FileType" ];
+    pattern = [ "markdown" "text" ];
+    command = "setlocal spell";
+  }];
 }
