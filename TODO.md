@@ -6,7 +6,6 @@
 - Close-all-buffers mapping (was `<leader>bxa`)
 - `<leader>te`: tabedit in the current buffer's directory
 - Folding: `foldmethod=indent`, `foldnestmax=3`
-- `switchbuf = useopen,usetab,newtab`
 - Tab-completion behaviour (old `Inserttabwrapper` / `completeopt` / `<s-tab>`) —
   review against the current completion plugin
 - Spell mappings: toggle (`<leader>ss`), next/prev (`]s`/`[s`), add-to-dict

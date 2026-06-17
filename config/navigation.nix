@@ -29,6 +29,13 @@
   opts = {
     # Enable mouse mode, can be useful for resizing splits for example!
     mouse = "a";
+
+    # Where to open a buffer when a command *jumps* to one (quickfix/location
+    # list entries, :sbuffer, etc.):
+    #   useopen - if the buffer is already shown in a window, jump there
+    #   usetab  - extend useopen to windows in other tab pages
+    #   newtab  - otherwise open the jump in a new tab (not the current window)
+    switchbuf = "useopen,usetab,newtab";
   };
 
   keymaps = [
