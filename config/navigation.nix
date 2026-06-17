@@ -79,4 +79,12 @@
     vim.opt.jumpoptions:append("view")
   '';
 
+  # Set the previous-context mark on every BufLeave so the position before
+  # leaving a buffer (including via netrw) is reachable with '' / `` .
+  autoCmdGroup.jumplist.autoCmds = [{
+    desc = "Set previous-context mark on BufLeave";
+    event = [ "BufLeave" ];
+    command = "normal! m'";
+  }];
+
 }
