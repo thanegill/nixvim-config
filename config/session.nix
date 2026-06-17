@@ -17,9 +17,26 @@ lib.mkMerge [
         '';
         bypass_save_filetypes = [ "oil" "gitcommit" ];
         close_filetypes_on_save = [ "checkhealth" "gitcommit" ];
-        # FIXME: gitcommit (COMMIT_EDITMSG / GIT_COMMIT) buffers are still being
-        # restored into recovered sessions, despite "gitcommit" being listed in
-        # both bypass_save_filetypes and close_filetypes_on_save.
+
+        # close_filetypes_on_save only closes windows, and bypass_save_filetypes
+        # only bypasses when the *current* buffer matches — neither wipes a
+        # gitcommit buffer sitting in the background, so COMMIT_EDITMSG kept
+        # leaking into saved/restored sessions. Explicitly wipe any gitcommit
+        # buffers right before the session is written.
+        pre_save_cmds = [
+          {
+            __raw = ''
+              function()
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                  if vim.api.nvim_buf_is_valid(buf)
+                    and vim.bo[buf].filetype == "gitcommit" then
+                    pcall(vim.api.nvim_buf_delete, buf, { force = true })
+                  end
+                end
+              end
+            '';
+          }
+        ];
       };
     };
 
