@@ -1,10 +1,9 @@
 # TODO
 
 ## Migrate from vim config (from the old vimrc)
-- backup and undo dirs (`backup`/`undo` under files?)
-- Folding: `foldmethod=indent`, `foldnestmax=3`
-- Spell mappings: toggle (`<leader>ss`), next/prev (`]s`/`[s`), add-to-dict
-  (`zg`), suggest (`z=`)
+- Spell mappings: next/prev (`]s`/`[s`), add-to-dict (`zg`), suggest (`z=`), and a
+  toggle (the old `<leader>ss` is taken by telescope [S]earch [S]elect — pick a
+  free key)
 
 ## Plugins to evaluate
 - firenvim — disabled for now. Re-enable behind its own dedicated config/module
