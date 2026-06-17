@@ -1,4 +1,8 @@
+{ pkgs, ... }:
 {
+  # fd powers the smart find-files picker (see extraConfigLua below).
+  extraPackages = [ pkgs.fd ];
+
   # Fuzzy Finder (files, lsp, etc)
   # https://nix-community.github.io/nixvim/plugins/telescope/index.html
   # https://github.com/nvim-telescope/telescope.nvim
@@ -67,8 +71,8 @@
     # You can put your default mappings / updates / etc. in here
     # See `:help telescope.builtin`
     keymaps = {
-      "<leader><leader>" = { mode = "n"; action = "find_files hidden=false"; options = { desc = "[S]earch [F]iles"; }; };
-      "<leader>sf" = { mode = "n"; action = "find_files"; options = { desc = "[S]earch [F]iles"; }; };
+      # <leader><leader> and <leader>sf use the smart find-files picker defined
+      # in the keymaps list below (hidden files revealed on '.' / toggled <C-h>).
       "<leader>ss" = { mode = "n"; action = "builtin"; options = { desc = "[S]earch [S]elect Telescope"; }; };
       "<leader>sb" = { mode = "n"; action = "buffers"; options = { desc = "[S]earch [B]uffers"; }; };
       "<leader>sh" = { mode = "n"; action = "help_tags"; options = { desc = "[S]earch [H]elp"; }; };
@@ -115,7 +119,71 @@
       '';
       options.desc = "[T]elescope [E]dit in buffer's dir";
     }
+    {
+      mode = "n";
+      key = "<leader><leader>";
+      action.__raw = "function() _G.telescope_smart_find_files() end";
+      options.desc = "[S]earch [F]iles";
+    }
+    {
+      mode = "n";
+      key = "<leader>sf";
+      action.__raw = "function() _G.telescope_smart_find_files() end";
+      options.desc = "[S]earch [F]iles";
+    }
   ];
+
+  # Smart file finder for <leader><leader> and <leader>sf: hidden files are
+  # excluded by default, revealed as soon as the prompt starts with '.', and
+  # toggled on demand with <C-h> inside the picker.
+  extraConfigLua = ''
+    _G.telescope_smart_find_files = function()
+      local pickers = require("telescope.pickers")
+      local finders = require("telescope.finders")
+      local make_entry = require("telescope.make_entry")
+      local conf = require("telescope.config").values
+      local action_state = require("telescope.actions.state")
+
+      local state = { forced = false, hidden = false }
+
+      local function make_finder()
+        local cmd = { "fd", "--type", "f", "--color=never", "--strip-cwd-prefix", "--exclude", ".git" }
+        if state.hidden then
+          table.insert(cmd, "--hidden")
+        end
+        return finders.new_oneshot_job(cmd, { entry_maker = make_entry.gen_from_file({}) })
+      end
+
+      local function want_hidden(prompt)
+        return state.forced or (prompt or ""):sub(1, 1) == "."
+      end
+
+      pickers.new({}, {
+        prompt_title = "Find Files",
+        finder = make_finder(),
+        sorter = conf.generic_sorter({}),
+        previewer = conf.file_previewer({}),
+        on_input_filter_cb = function(prompt)
+          local wh = want_hidden(prompt)
+          if wh ~= state.hidden then
+            state.hidden = wh
+            return { prompt = prompt, updated_finder = make_finder() }
+          end
+          return { prompt = prompt }
+        end,
+        attach_mappings = function(prompt_bufnr, map)
+          local function toggle_hidden()
+            state.forced = not state.forced
+            state.hidden = want_hidden(action_state.get_current_line())
+            action_state.get_current_picker(prompt_bufnr):refresh(make_finder(), { reset_prompt = false })
+          end
+          map("i", "<C-h>", toggle_hidden)
+          map("n", "<C-h>", toggle_hidden)
+          return true
+        end,
+      }):find()
+    end
+  '';
 
   # Document existing key chains in which-key
   plugins.which-key.settings.spec = [
