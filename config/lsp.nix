@@ -49,9 +49,23 @@
           config = {
             nixd = {
               formatting.command = [ "nix fmt" ];
-              # TODO: configure nixd `options` (nixos/home-manager/flake exprs)
-              # for completion and docs on this flake's own options. See:
-              # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md#configuration-overview
+
+              # Option completion/docs. nixd evaluates these exprs at runtime,
+              # resolving `nixos-config` through the system nix registry (so no
+              # absolute path), then taking the first host of each type — option
+              # declarations don't vary by host, so the specific one doesn't
+              # matter and nothing is hardcoded.
+              #
+              # home-manager is integrated into the system configs (there are no
+              # standalone homeConfigurations), so its options surface under the
+              # nixos/darwin trees rather than as a separate entry. nixvim doesn't
+              # expose an options tree from this flake, so this repo's own
+              # top-level options aren't covered here — within the system configs
+              # they appear under `programs.nixvim.*`.
+              options = {
+                nixos.expr = ''(builtins.head (builtins.attrValues (builtins.getFlake "nixos-config").nixosConfigurations)).options'';
+                darwin.expr = ''(builtins.head (builtins.attrValues (builtins.getFlake "nixos-config").darwinConfigurations)).options'';
+              };
             };
           };
         };
