@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   imports = [
     ./filetypes
     ./search.nix
@@ -12,6 +13,7 @@
     ./spelling.nix
     ./diagnostic.nix
     ./debugging.nix
+    ./reload.nix
   ];
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
@@ -66,12 +68,14 @@
   #
   # NOTE: This won't work in all terminal emulators/tmux/etc. Try your own
   # mapping or just use <C-\><C-n> to exit terminal mode.
-  keymaps = [{
-    mode = "t";
-    key = "<Esc><Esc>";
-    action = "<C-\\><C-n>";
-    options.desc = "Exit terminal mode";
-  }];
+  keymaps = [
+    {
+      mode = "t";
+      key = "<Esc><Esc>";
+      action = "<C-\\><C-n>";
+      options.desc = "Exit terminal mode";
+    }
+  ];
 
   userCommands.Preview = {
     desc = "Open buffer (or given path) in default application";

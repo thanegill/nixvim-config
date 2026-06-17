@@ -16,7 +16,6 @@
 ## New features
 - command line directly under the active window
   (https://github.com/folke/noice.nvim)
-- reload config on SIGUSR1 (autocmd; was WIP in `config/default.nix`)
 
 ## MacVim Replacement
 https://wiki.archlinux.org/title/Neovim
