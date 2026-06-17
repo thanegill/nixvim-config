@@ -153,9 +153,11 @@
               # Install the relaunch-loop wrapper at higher priority so it shadows
               # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
               # reloads work) would only exist in `packages.default`, not here.
-              environment.systemPackages = [
-                (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
-              ];
+              environment.systemPackages =
+                lib.mkIf (config.programs.nixvim.enable && config.programs.nixvim.wrapRc)
+                  [
+                    (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
+                  ];
 
               # Tell running nvim instances to reload (SIGUSR1 -> config/reload.nix)
               # once the new generation is in place. `|| true` keeps activation from
@@ -183,7 +185,7 @@
               # Install the relaunch-loop wrapper at higher priority so it shadows
               # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
               # reloads work) would only exist in `packages.default`, not here.
-              home.packages = [
+              home.packages = lib.mkIf (config.programs.nixvim.enable && config.programs.nixvim.wrapRc) [
                 (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
               ];
 
@@ -221,9 +223,11 @@
               # Install the relaunch-loop wrapper at higher priority so it shadows
               # nixvim's own nvim on PATH — otherwise the loop (which makes SIGUSR1
               # reloads work) would only exist in `packages.default`, not here.
-              environment.systemPackages = [
-                (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
-              ];
+              environment.systemPackages =
+                lib.mkIf (config.programs.nixvim.enable && config.programs.nixvim.wrapRc)
+                  [
+                    (lib.hiPrio (reloadWrap pkgs config.programs.nixvim.build.package))
+                  ];
 
               # procps is Linux-only; macOS ships /usr/bin/pkill.
               system.activationScripts.postActivation.text = lib.mkAfter ''
