@@ -3,8 +3,6 @@
 ## Migrate from vim config (from the old vimrc)
 - backup and undo dirs (`backup`/`undo` under files?)
 - Folding: `foldmethod=indent`, `foldnestmax=3`
-- Tab-completion behaviour (old `Inserttabwrapper` / `completeopt` / `<s-tab>`) —
-  review against the current completion plugin
 - Spell mappings: toggle (`<leader>ss`), next/prev (`]s`/`[s`), add-to-dict
   (`zg`), suggest (`z=`)
 

@@ -44,7 +44,28 @@
       # <c-k>: Toggle signature help
       #
       # See :h blink-cmp-config-keymap for defining your own keymap
-      keymap.preset = "super-tab";
+      keymap = {
+        preset = "super-tab";
+
+        # super-tab + show_on_insert means the menu pops up even on an empty
+        # line, so plain <Tab> gets captured to accept a completion instead of
+        # indenting. Override <Tab> to fall back to a literal Tab when the
+        # cursor is at column 0 or preceded only by whitespace.
+        "<Tab>".__raw = ''
+          {
+            function(cmp)
+              local col = vim.fn.col(".") - 1
+              if col == 0 or vim.fn.getline("."):sub(1, col):match("^%s*$") then
+                return false -- fall through to "fallback" (insert a real Tab)
+              end
+              if cmp.snippet_active() then return cmp.accept() end
+              return cmp.select_and_accept()
+            end,
+            "snippet_forward",
+            "fallback",
+          }
+        '';
+      };
 
       # For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       # https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
