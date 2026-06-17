@@ -49,6 +49,29 @@
         settings.n_line = 500;
       };
 
+      # Move lines and visual selections up/down.
+      #
+      # Bound to Ctrl+Shift+j/k because plain <C-j>/<C-k> are window-focus
+      # binds (see config/interface.nix). Distinguishing Shift relies on
+      # kitty's keyboard protocol; in a plain terminal these keys no-op.
+      # Horizontal moves are disabled to keep the binding focused on up/down.
+      #
+      # https://nix-community.github.io/nixvim/plugins/mini-move/index.html
+      # https://github.com/nvim-mini/mini.move/
+      mini-move = {
+        enable = true;
+        settings.mappings = {
+          down = "<C-S-j>";
+          up = "<C-S-k>";
+          line_down = "<C-S-j>";
+          line_up = "<C-S-k>";
+          left = "";
+          right = "";
+          line_left = "";
+          line_right = "";
+        };
+      };
+
       # Add/delete/replace surroundings (brackets, quotes, etc.)
       #
       # Examples:
