@@ -5,6 +5,7 @@
     ./search.nix
     ./editing.nix
     ./interface.nix
+    ./gui.nix
     ./navigation.nix
     ./session.nix
     ./git.nix
