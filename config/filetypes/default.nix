@@ -38,7 +38,26 @@
     # https://github.com/LnL7/vim-nix/
     nix.enable = true;
 
+    # Edit fenced code blocks in their native language: LSP, completion, and
+    # diagnostics work inside embedded code (e.g. code fences in markdown).
+    # Activated per-buffer by the autocmd below.
+    # https://nix-community.github.io/nixvim/plugins/otter/index.html
+    # https://github.com/jmbuhr/otter.nvim/
+    otter.enable = true;
+
   };
+
+  # Turn otter on for filetypes that embed other languages in fenced blocks.
+  autoCmdGroup.otter.autoCmds = [{
+    desc = "Activate otter for embedded code blocks";
+    event = [ "FileType" ];
+    pattern = [ "markdown" "quarto" "norg" ];
+    callback.__raw = ''
+      function()
+        require('otter').activate()
+      end
+    '';
+  }];
 
   extraPlugins = with pkgs.vimPlugins; [
     python-syntax
