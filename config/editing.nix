@@ -78,15 +78,20 @@
       # https://github.com/nvim-mini/mini.align/
       mini-align.enable = true;
 
-      # Add/delete/replace surroundings (brackets, quotes, etc.)
+      # Add/delete/replace surroundings (brackets, quotes, tags, etc.).
+      #
+      # Keeps vim-surround's ys/ds/cs mappings (so muscle memory carries over)
+      # while adding target highlighting and easy custom surrounds.
       #
       # Examples:
-      #  - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      #  - sd'   - [S]urround [D]elete [']quotes
-      #  - sr)'  - [S]urround [R]eplace [)] [']
-      # TODO: decide between vim-surround (current), mini-surround, and
-      # nvim-surround, then drop the other two.
-      vim-surround.enable = true;
+      #  - ysiw) - [Y]ou [S]urround [I]nner [W]ord with [)]
+      #  - ds"   - [D]elete [S]urrounding [")]
+      #  - cs)'  - [C]hange [S]urrounding [)] to [']
+      #  - (visual) S) - surround the selection with [)]
+      #
+      # https://nix-community.github.io/nixvim/plugins/nvim-surround/index.html
+      # https://github.com/kylechui/nvim-surround/
+      nvim-surround.enable = true;
 
       # Preview colors in Vim.
       # https://nix-community.github.io/nixvim/plugins/colorizer/index.html
