@@ -49,6 +49,14 @@
     # buffer (like `:q`), instead raise a dialog asking if you wish to save the
     # current file(s) See `:help 'confirm'`
     confirm = true;
+
+    # Command-line completion: complete the longest common match and show the
+    # wildmenu, then cycle through full matches on subsequent presses.
+    wildmode = "longest:full,full";
+
+    # Patterns to skip in command-line file completion. (Telescope/fd handle
+    # fuzzy file finding separately and are unaffected by this.)
+    wildignore = "*.o,*.obj,*.pyc,*.class,*/.git/*,*/node_modules/*,*/target/*,*/result/*,*/.direnv/*,*.DS_Store";
   };
 
   # Exit terminal mode in the builtin terminal with a shortcut that is a bit
