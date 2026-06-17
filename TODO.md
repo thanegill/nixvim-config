@@ -2,7 +2,6 @@
 
 ## Migrate from vim config (from the old vimrc)
 - backup and undo dirs (`backup`/`undo` under files?)
-- EasyAlign (`ga` mappings, visual + motion)
 - Jinja filetype: map `*.tpl` -> jinja, commentstring `{# %s #}`, 2-space indent
 - Add netrw to jumplist (on `BufLeave` run `normal! m'`)
 - Close-all-buffers mapping (was `<leader>bxa`)

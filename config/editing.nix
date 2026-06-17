@@ -72,6 +72,12 @@
         };
       };
 
+      # Align text interactively (`ga` to align, `gA` to align with preview),
+      # in both normal (with a motion/textobject) and visual mode.
+      # https://nix-community.github.io/nixvim/plugins/mini-align/index.html
+      # https://github.com/nvim-mini/mini.align/
+      mini-align.enable = true;
+
       # Add/delete/replace surroundings (brackets, quotes, etc.)
       #
       # Examples:
