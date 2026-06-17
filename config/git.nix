@@ -14,6 +14,27 @@
   #   '';
   # }];
 
+  # gitcommit buffers: spell-check the message, and strip trailing whitespace on
+  # save (reusing whitespace-nvim's trim, see config/plugins/whitespace.nix).
+  autoCmdGroup.gitcommit.autoCmds = [
+    {
+      desc = "Enable spell for git commit messages";
+      event = [ "FileType" ];
+      pattern = "gitcommit";
+      command = "setlocal spell";
+    }
+    {
+      desc = "Trim trailing whitespace in commit messages on save";
+      event = [ "BufWritePre" ];
+      pattern = [ "COMMIT_EDITMSG" "MERGE_MSG" "TAG_EDITMSG" ];
+      callback.__raw = ''
+        function()
+          require('whitespace-nvim').trim()
+        end
+      '';
+    }
+  ];
+
   # Adds git related signs to the gutter, as well as utilities for managing
   # changes.
   # See `:help gitsigns` to understand what the configuration keys do
