@@ -14,7 +14,6 @@
     ./spelling.nix
     ./diagnostic.nix
     ./debugging.nix
-    ./reload.nix
   ];
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#globals
