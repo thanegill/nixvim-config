@@ -4,6 +4,13 @@
     plugins = {
       lsp.enable = true;
 
+      # Standalone UI for nvim-lsp progress (the "$/progress" notifications
+      # servers emit while indexing, etc.). Signature help is already handled
+      # by blink.cmp, so lsp-signature is intentionally not added.
+      # https://nix-community.github.io/nixvim/plugins/fidget/index.html
+      # https://github.com/j-hui/fidget.nvim/
+      fidget.enable = true;
+
       # schemastore enables yamlls and jsonls lsp with schema definitions.
       # https://nix-community.github.io/nixvim/plugins/schemastore/
       # https://github.com/b0o/SchemaStore.nvim
