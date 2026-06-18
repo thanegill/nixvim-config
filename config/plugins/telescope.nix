@@ -133,9 +133,9 @@
     }
   ];
 
-  # Smart file finder for <leader><leader> and <leader>sf: hidden files are
-  # excluded by default, revealed as soon as the prompt starts with '.', and
-  # toggled on demand with <C-h> inside the picker.
+  # Smart file finder for <leader><leader> and <leader>sf: hidden/ignored files
+  # are excluded by default, revealed (--hidden --no-ignore) as soon as the
+  # prompt starts with '.', and toggled on demand with <C-h> inside the picker.
   extraConfigLua = ''
     _G.telescope_smart_find_files = function()
       local pickers = require("telescope.pickers")
@@ -149,7 +149,11 @@
       local function make_finder()
         local cmd = { "fd", "--type", "f", "--color=never", "--strip-cwd-prefix", "--exclude", ".git" }
         if state.hidden then
+          -- --hidden reveals dotfiles; --no-ignore also surfaces files matched
+          -- by .gitignore (incl. the global one, e.g. .claude/*), which is what
+          -- "show hidden" is expected to do.
           table.insert(cmd, "--hidden")
+          table.insert(cmd, "--no-ignore")
         end
         return finders.new_oneshot_job(cmd, { entry_maker = make_entry.gen_from_file({}) })
       end
