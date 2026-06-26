@@ -1,0 +1,36 @@
+name: CI
+
+# Build gate for branch pushes and pull requests: `nix flake check` builds the full
+# config and runs nvim headless (checks.default) plus the reload-* checks — the same
+# gate the project points at for verifying a change (see README / CLAUDE.md).
+#
+# Master pushes are excluded on purpose: notify-nixos-config.yml already runs this
+# exact check on master before dispatching the nixos-config bump, so gating master
+# here as well would just build the config twice per push.
+#
+# No nixfmt gate: the tree isn't nixfmt-clean, so a format check would fail on
+# pre-existing files unrelated to a change.
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: nix flake check
+        run: nix flake check --print-build-logs
