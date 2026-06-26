@@ -41,9 +41,6 @@
       terraform = [
         "tflint"
       ];
-      text = [
-        "vale"
-      ];
       # json = [ "jsonlint" ]; # Not packaged yet
     };
   };
