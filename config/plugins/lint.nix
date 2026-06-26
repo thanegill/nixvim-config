@@ -41,9 +41,12 @@
       terraform = [
         "tflint"
       ];
-      text = [
-        "vale"
-      ];
+      # vale errors (E100) in any project without a `.vale.ini`, so it can't run
+      # as a blanket text linter. Re-enable per-project once a vale config +
+      # styles exist (the config must live in the edited project, not here).
+      # text = [
+      #   "vale"
+      # ];
       # json = [ "jsonlint" ]; # Not packaged yet
     };
   };

@@ -72,6 +72,24 @@
   # Treat *.tpl files as jinja templates (vim-jinja + jinja_lsp handle the rest).
   filetype.extension.tpl = "jinja";
 
+  # Ansible has no unique extension, so detect it for any .yml/.yaml file that
+  # either lives under an `ansible.cfg` project root or sits in the standard
+  # role/playbook directory layout, and set the `yaml.ansible` filetype that
+  # ansiblels expects. Returning nil falls through to plain `yaml` (yamlls).
+  # The value is a function (path, bufnr) -> filetype | nil.
+  filetype.pattern.".*%.ya?ml".__raw = ''
+    function(path, _)
+      if vim.fs.root(path, "ansible.cfg")
+        or path:match("/playbooks/")
+        or path:match("/tasks/")
+        or path:match("/handlers/")
+        or path:match("/roles/")
+      then
+        return "yaml.ansible"
+      end
+    end
+  '';
+
   extraFiles = {
     "after/ftplugin/markdown.lua".text = ''
       vim.opt_local.wrap = true

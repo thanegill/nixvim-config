@@ -5,6 +5,11 @@
   config = lib.mkMerge [
 
     {
+      # Runtime dependencies spawned by language servers.
+      # ansiblels shells out to `ansible-lint` for diagnostics/validation.
+      # https://nix-community.github.io/nixvim/NeovimOptions/index.html#extrapackages
+      extraPackages = [ pkgs.ansible-lint ];
+
       plugins = {
         lsp.enable = true;
 
@@ -119,13 +124,23 @@
           ts_ls.enable = true;
 
           # Ansible playbooks / roles
-          ansiblels.enable = true;
+          # nixvim lists ansiblels in its `unpackaged` set, so the package must
+          # be supplied explicitly. Filetype detection (yaml.ansible) is wired up
+          # in config/filetypes/default.nix.
+          ansiblels = {
+            enable = true;
+            package = pkgs.ansible-language-server;
+          };
 
           # jq
           jqls.enable = true;
 
           # AWK
-          awk_ls.enable = true;
+          # nixvim lists awk_ls in its `unpackaged` set, so supply the package.
+          awk_ls = {
+            enable = true;
+            package = pkgs.awk-language-server;
+          };
         };
       };
     }
