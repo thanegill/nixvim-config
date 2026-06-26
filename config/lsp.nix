@@ -212,9 +212,9 @@
         diff.algorithm = "patience";
 
         # Render the code-action diff preview with delta (side-by-side, syntax
-        # highlighted). Needs the `delta` binary, added to extraPackages below.
+        # highlighted).
         highlight_command = [
-          { __raw = ''require("actions-preview.highlight").delta("delta --side-by-side")''; }
+          { __raw = ''require("actions-preview.highlight").delta("${lib.getExe pkgs.delta} --side-by-side")''; }
         ];
 
         telescope = {
@@ -234,9 +234,6 @@
         };
       };
     };
-
-    # delta backs actions-preview's highlight_command above.
-    extraPackages = [ pkgs.delta ];
 
     keymaps = [ {
       key = "gra";

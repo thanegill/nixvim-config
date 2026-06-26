@@ -1,8 +1,5 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
-  # fd powers the smart find-files picker (see extraConfigLua below).
-  extraPackages = [ pkgs.fd ];
-
   # Fuzzy Finder (files, lsp, etc)
   # https://nix-community.github.io/nixvim/plugins/telescope/index.html
   # https://github.com/nvim-telescope/telescope.nvim
@@ -147,7 +144,7 @@
       local state = { forced = false, hidden = false }
 
       local function make_finder()
-        local cmd = { "fd", "--type", "f", "--color=never", "--strip-cwd-prefix", "--exclude", ".git" }
+        local cmd = { "${lib.getExe pkgs.fd}", "--type", "f", "--color=never", "--strip-cwd-prefix", "--exclude", ".git" }
         if state.hidden then
           -- --hidden reveals dotfiles; --no-ignore also surfaces files matched
           -- by .gitignore (incl. the global one, e.g. .claude/*), which is what
