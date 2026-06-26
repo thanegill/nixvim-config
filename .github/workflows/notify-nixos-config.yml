@@ -1,0 +1,54 @@
+name: notify-nixos-config
+
+# nixos-config consumes this repo as the `nixvim-config` flake input, tracking the
+# default branch (no release tags — unlike pinboard-sync's rolling `latest`). On its
+# own, nixos-config only re-locks this input on its weekly `update-flake-inputs` cron,
+# so a push here can sit unbuilt on every host for days.
+#
+# This workflow closes that gap the same way pinboard-sync's release does: once a push
+# to the default branch passes `nix flake check`, it fires a `repository_dispatch`
+# (type `update-input`, client-payload `{"input": "nixvim-config"}`) at nixos-config.
+# That repo's `update-flake-inputs` workflow validates the name against its discovered
+# inputs and opens a single `flake-update/nixvim-config` PR for the bump immediately.
+#
+# We notify only after a green check so nixos-config never opens a bump for a commit
+# that doesn't evaluate/build.
+#
+# Requires repo secret NIXOS_CONFIG_DISPATCH_TOKEN: a PAT with write access to
+# thanegill/nixos-config (repository_dispatch is a write API) — the same secret
+# pinboard-sync uses to dispatch to nixos-config.
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notify-nixos-config-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-and-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      # Builds the full config and runs nvim headless (checks.default) plus the
+      # reload-* checks — the same gate as the local dev loop.
+      - name: nix flake check
+        run: nix flake check --print-build-logs
+
+      # Only reached when the check above is green. Tells nixos-config to re-lock its
+      # nixvim-config input to this commit.
+      - name: Notify nixos-config to bump the nixvim-config input
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.NIXOS_CONFIG_DISPATCH_TOKEN }}
+          repository: thanegill/nixos-config
+          event-type: update-input
+          client-payload: '{"input": "nixvim-config"}'
