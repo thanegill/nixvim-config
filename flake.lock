@@ -92,11 +92,33 @@
         "type": "github"
       }
     },
+    "poly-direnv": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": "treefmt-nix"
+      },
+      "locked": {
+        "lastModified": 1781600818,
+        "narHash": "sha256-JNYoN6Cv7FV00hb8PV4pufKL8pYuSYCRkvrXnx7YYsg=",
+        "owner": "JHolba",
+        "repo": "poly-direnv.nvim",
+        "rev": "80af7da2f0afc1d78e3cbc3ddb10628c0cbf9d9d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JHolba",
+        "repo": "poly-direnv.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs",
-        "nixvim": "nixvim"
+        "nixvim": "nixvim",
+        "poly-direnv": "poly-direnv"
       }
     },
     "systems": {
@@ -112,6 +134,27 @@
         "owner": "nix-systems",
         "ref": "future-26.11",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "poly-direnv",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780220602,
+        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
         "type": "github"
       }
     }
