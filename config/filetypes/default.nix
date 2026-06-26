@@ -1,6 +1,7 @@
 { pkgs, ... }: {
 
   imports = [
+    ./ansible.nix
     ../plugins/treesitter.nix
     ../plugins/lint.nix
   ];

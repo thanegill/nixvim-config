@@ -121,9 +121,6 @@
           # TypeScript / JavaScript
           ts_ls.enable = true;
 
-          # Ansible playbooks / roles
-          ansiblels.enable = true;
-
           # jq
           jqls.enable = true;
 
