@@ -88,6 +88,29 @@ in
         +'qall!'
       echo PASS; touch "$out"
     '';
+
+    # Integration: a real SIGUSR1 must actually *fire* the handler (registration,
+    # asserted by reload-handler, is necessary but not sufficient) — the editor
+    # saves its session and exits 77, which is what drives the relaunch loop. Run
+    # headlessly; a scheduled VimEnter writes a readiness file so the signal can't
+    # race startup, and a deferred `cquit 1` is a hard timeout so a missed signal
+    # fails the build instead of hanging it.
+    reload-signal = pkgs.runCommand "reload-signal-test" { } ''
+      export HOME=$(mktemp -d)
+      ready="$HOME/ready"
+      "${configuredNvim}/bin/nvim" --headless -i NONE \
+        +"lua vim.schedule(function() vim.fn.writefile({ tostring(vim.fn.getpid()) }, '$ready') end)" \
+        +'lua vim.defer_fn(function() vim.cmd("cquit 1") end, 30000)' &
+      pid=$!
+      for _ in $(seq 1 100); do [ -f "$ready" ] && break; sleep 0.1; done
+      [ -f "$ready" ] || { echo "FAIL: editor never signalled readiness"; kill "$pid" 2>/dev/null; exit 1; }
+      kill -USR1 "$(cat "$ready")"
+      set +e; wait "$pid"; code=$?; set -e
+      echo "editor exit code: $code"
+      [ "$code" = 77 ] \
+        || { echo "FAIL: SIGUSR1 should fire the handler and exit 77, got $code"; exit 1; }
+      echo PASS; touch "$out"
+    '';
   };
 
   systemModule =
