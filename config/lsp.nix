@@ -125,7 +125,11 @@
           jqls.enable = true;
 
           # AWK
-          awk_ls.enable = true;
+          # nixvim lists awk_ls in its `unpackaged` set, so supply the package.
+          awk_ls = {
+            enable = true;
+            package = pkgs.awk-language-server;
+          };
         };
       };
     }
