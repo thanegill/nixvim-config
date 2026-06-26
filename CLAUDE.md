@@ -4,6 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 See [`README.md`](README.md) for what this project is, the build/run commands, and the architecture (flake entry point, feature-first `config/` layout, custom `modules/`). This file covers only what to do *differently* when editing the config here.
 
+## Skills
+
+This is an entirely Nix codebase — always invoke the `nix` skill at the start of any task here, before editing or investigating config.
+
 ## Verifying changes
 
 There is no unit-test suite, but `flake.nix` defines `checks.default`, which builds the full config and runs nvim headless to confirm it loads. After changing config, run `nix build` (fast) or `nix flake check` (also runs the headless check) to confirm it still works before claiming success.
