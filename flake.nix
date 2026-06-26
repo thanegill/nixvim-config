@@ -6,6 +6,15 @@
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+
+    # Per-directory direnv environments for LSP servers: injects each server's
+    # devShell env at spawn time, so LSP binaries resolve from the project's
+    # `nix develop`/direnv even when nvim was started outside it.
+    # https://github.com/JHolba/poly-direnv.nvim
+    poly-direnv = {
+      url = "github:JHolba/poly-direnv.nvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -58,6 +67,21 @@
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
             config.allowUnfree = true;
+            # Exposes pkgs.vimPlugins.poly-direnv-nvim, built from the input
+            # source. We don't use the input's own overlay: it defines
+            # `vimPlugins` in terms of `final.vimPlugins`, which infinitely
+            # recurses. Reference `prev` here to break that cycle.
+            overlays = [
+              (_: prev: {
+                vimPlugins = prev.vimPlugins // {
+                  poly-direnv-nvim = prev.vimUtils.buildVimPlugin {
+                    pname = "poly-direnv-nvim";
+                    version = "0.1.0";
+                    src = inputs.poly-direnv;
+                  };
+                };
+              })
+            ];
           };
 
           packages = {
@@ -95,7 +119,10 @@
           default =
             { ... }:
             {
-              imports = builtins.attrValues (removeDefault self.nixvimModules);
+              imports = builtins.attrValues (removeDefault self.nixvimModules) ++ [
+                # Adds the `plugins.poly-direnv` options used in config/plugins/poly-direnv.nix.
+                inputs.poly-direnv.nixvimModules.default
+              ];
             };
           config = import ./config;
           modules = import ./modules;

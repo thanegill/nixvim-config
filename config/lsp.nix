@@ -1,6 +1,9 @@
 { pkgs, lib, ... }:
 {
-  imports = [ ./plugins/garbage-day.nix ];
+  imports = [
+    ./plugins/garbage-day.nix
+    ./plugins/poly-direnv.nix
+  ];
 
   config = lib.mkMerge [
 
