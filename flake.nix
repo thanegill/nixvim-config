@@ -67,28 +67,12 @@
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
             config.allowUnfree = true;
-            # Exposes pkgs.vimPlugins.poly-direnv-nvim, built from the input
-            # source. We don't use the input's own overlay: it defines
-            # `vimPlugins` in terms of `final.vimPlugins`, which infinitely
-            # recurses. Reference `prev` here to break that cycle.
-            # Drop this for inputs.poly-direnv.overlays.default once upstream is
-            # fixed — tracked in https://github.com/thanegill/nixvim-config/issues/4
-            overlays = [
-              (_: prev: {
-                vimPlugins = prev.vimPlugins // {
-                  poly-direnv-nvim = prev.vimUtils.buildVimPlugin {
-                    pname = "poly-direnv-nvim";
-                    version = "0.1.0";
-                    src = inputs.poly-direnv;
-                  };
-                };
-              })
-            ];
           };
 
           packages = {
             default = nvimPackage;
             nvim = nvimPackage;
+            inherit ((pkgs.extend self.overlays.default).vimPlugins) poly-direnv-nvim;
           };
           apps = rec {
             default = nvim;
@@ -117,6 +101,24 @@
         };
 
       flake = {
+        # Adds pkgs.vimPlugins.poly-direnv-nvim, built from the input. nixvimModules.default
+        # applies this via nixpkgs.overlays, so config/plugins/poly-direnv.nix finds the
+        # plugin on whatever pkgs nixvim is given — including a consumer's own pkgs
+        # (nixos-config sets programs.nixvim.nixpkgs.pkgs). Also exported for reuse. We
+        # don't use the input's own overlay: it defines vimPlugins in terms of
+        # final.vimPlugins, which infinitely recurses — reference prev to break the
+        # cycle. Drop for inputs.poly-direnv.overlays.default once upstream is fixed —
+        # https://github.com/thanegill/nixvim-config/issues/4
+        overlays.default = _: prev: {
+          vimPlugins = prev.vimPlugins // {
+            poly-direnv-nvim = prev.vimUtils.buildVimPlugin {
+              pname = "poly-direnv-nvim";
+              version = "0.1.0";
+              src = inputs.poly-direnv;
+            };
+          };
+        };
+
         nixvimModules = {
           default =
             { ... }:
@@ -125,6 +127,7 @@
                 # Adds the `plugins.poly-direnv` options used in config/plugins/poly-direnv.nix.
                 inputs.poly-direnv.nixvimModules.default
               ];
+              nixpkgs.overlays = [ self.overlays.default ];
             };
           config = import ./config;
           modules = import ./modules;
