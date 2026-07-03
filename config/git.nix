@@ -2,18 +2,6 @@
 
   plugins.fugitive.enable = true;
 
-  # autoCmdGroup.gitcommit.autoCmds = [{
-  #   event = [ "FileType" ];
-  #   pattern = "gitcommit";
-  #   command = ":DiffGitCached | wincmd p | resize 20";
-  #   desc = "Auto show git diff --cached in horizontal split";
-  #   callback.__raw = ''
-  #     function()
-  #       vim.opt.winfixheight = 20;
-  #     end
-  #   '';
-  # }];
-
   # Trim trailing whitespace from commit messages on save (reusing
   # whitespace-nvim's trim, see config/plugins/whitespace.nix). Spell/grammar is
   # handled by harper_ls, which attaches to the gitcommit filetype.
