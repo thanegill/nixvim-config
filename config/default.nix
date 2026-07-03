@@ -31,8 +31,8 @@
   # warning so `nix flake check` (whose test fails on any warning) passes.
   version.enableNixpkgsReleaseCheck = false;
 
-  # firenvim is disabled for now; see TODO.md — it wants its own dedicated config
-  # that sets a firenvim-specific theme/options without fighting the main
+  # firenvim is disabled for now; see issue #9 -- it wants its own dedicated
+  # config that sets a firenvim-specific theme/options without fighting the main
   # colorscheme.
 
   # https://nix-community.github.io/nixvim/NeovimOptions/index.html#opts
@@ -90,6 +90,6 @@
       end
     '';
     # TODO: option to open in a specific application (e.g. Marked 2 via
-    # `open -b com.brettterpstra.marked2`).
+    # `open -b com.brettterpstra.marked2`). Tracked in #13.
   };
 }

@@ -41,7 +41,7 @@
       terraform = [
         "tflint"
       ];
-      # json = [ "jsonlint" ]; # Not packaged yet
+      # TODO: json = [ "jsonlint" ]; jsonlint not packaged. Tracked in #16.
     };
   };
 

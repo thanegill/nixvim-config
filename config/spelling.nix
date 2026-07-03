@@ -24,8 +24,8 @@
       typos_lsp.enable = true;
 
       # TODO: ltex_plus (LanguageTool grammar via pkgs.ltex-ls-plus) is the
-      # heavyweight alternative; it broke under firenvim, see:
-      # https://github.com/glacambre/firenvim/issues/1540
+      # heavyweight alternative; blocked on the firenvim/jansi interaction
+      # (https://github.com/glacambre/firenvim/issues/1540). Tracked in #10.
     };
   };
 
