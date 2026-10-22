@@ -3,19 +3,30 @@
 #
 #   * reloadWrap: wraps a Neovim package so `nvim` runs in a relaunch loop.
 #     Exiting with code 77 (config/reload.nix's handler runs `cquit 77`) re-execs
-#     the `nvim` on PATH; a `switch` repoints that profile symlink at the new
-#     generation, so this is how a running editor picks up a rebuilt config
-#     (`:restart` can't — it replays the pinned vim-pack-dir baked into v:argv).
-#     Arguments are dropped on relaunch so auto-session restores the saved session
-#     instead of reopening file arguments. NIXVIM_RELOADED tells the new instance
-#     to show a "reloaded" notification.
+#     the freshly switched nvim, so this is how a running editor picks up a rebuilt
+#     config (`:restart` can't — it replays the pinned vim-pack-dir baked into
+#     v:argv). It re-execs the absolute path the activation hook wrote to
+#     `reloadTargetFile`, falling back to the `nvim` on PATH: a system switch does
+#     not repoint /run/current-system (and thus PATH) until *after* activation
+#     scripts run, so re-execing via PATH alone would relaunch the OUTGOING
+#     generation (nixos-config#534). Arguments are dropped on relaunch so
+#     auto-session restores the saved session instead of reopening file arguments.
+#     NIXVIM_RELOADED tells the new instance to show a "reloaded" notification.
 #
 #   * systemModule: one module imported by the NixOS, home-manager, and nix-darwin
 #     wrappers in flake.nix. It installs the wrapped nvim at higher priority
-#     (shadowing nixvim's own nvim on PATH) and adds a post-switch `pkill -USR1`
-#     hook. Those three module systems each have a different activation mechanism
-#     and reject options they don't declare, so it detects which one it is in.
+#     (shadowing nixvim's own nvim on PATH) and adds a post-switch hook that writes
+#     the new nvim's store path to `reloadTargetFile` and sends `pkill -USR1`.
+#     Those three module systems each have a different activation mechanism and
+#     reject options they don't declare, so it detects which one it is in.
 let
+  # Absolute path of the newly switched nvim, written by the system activation
+  # hook and read by the relaunch loop. On a NixOS/nix-darwin `switch` the
+  # activation scripts run before /run/current-system is repointed, so PATH still
+  # resolves `nvim` to the outgoing generation; the loop re-execs this path
+  # instead to land on the incoming one. Overridable via env only for the tests.
+  reloadTargetFile = "/run/nixvim-reload-target";
+
   reloadWrap =
     pkgs: nvim:
     let
@@ -24,7 +35,11 @@ let
         code=$?
         [ "$code" = 77 ] || exit "$code"
         export NIXVIM_RELOADED=1
-        if command -v nvim > /dev/null 2>&1; then
+        target_file="''${NIXVIM_RELOAD_TARGET_FILE:-${reloadTargetFile}}"
+        target=$(cat "$target_file" 2> /dev/null) || target=""
+        if [ -n "$target" ] && [ -x "$target" ]; then
+          exec "$target"
+        elif command -v nvim > /dev/null 2>&1; then
           exec nvim
         else
           exec "${nvim}/bin/nvim"
@@ -53,7 +68,9 @@ in
   mkChecks = pkgs: configuredNvim: {
     # Relaunch-loop shell logic: exiting 77 must re-exec the `nvim` on PATH with
     # NIXVIM_RELOADED=1 and arguments dropped; any other exit code passes
-    # straight through. Uses a stub "nvim" that exits 77 once then 0.
+    # straight through. Uses a stub "nvim" that exits 77 once then 0. Points the
+    # handoff at a nonexistent file so the loop falls through to PATH (and the
+    # test stays hermetic on darwin, whose sandbox can see a real /run handoff).
     reload-wrapper =
       let
         stub = pkgs.writeShellScriptBin "nvim" ''
@@ -67,6 +84,7 @@ in
       pkgs.runCommand "reload-wrapper-test" { } ''
         tmp=$(mktemp -d)
         export STUB_COUNT="$tmp/count" STUB_LOG="$tmp/log"
+        export NIXVIM_RELOAD_TARGET_FILE="$tmp/absent"
         export PATH="${wrapped}/bin:$PATH"
         "${wrapped}/bin/nvim" the-file.txt
         echo "=== invocation log ==="; cat "$STUB_LOG"
@@ -76,6 +94,44 @@ in
           || { echo "FAIL: exit 77 should relaunch via PATH with args dropped and NIXVIM_RELOADED=1"; exit 1; }
         [ "$(wc -l < "$STUB_LOG")" = 2 ] \
           || { echo "FAIL: expected exactly 2 invocations (no extra relaunch on exit 0)"; exit 1; }
+        echo PASS; touch "$out"
+      '';
+
+    # The race fix (nixos-config#534): when reloadTargetFile names an executable,
+    # exit 77 must re-exec *that* absolute path -- the incoming generation the
+    # activation hook just wrote -- and NOT the `nvim` on PATH, which on a system
+    # switch still resolves to the outgoing generation. A decoy nvim on PATH must
+    # go unused.
+    reload-wrapper-handoff =
+      let
+        inner = pkgs.writeShellScriptBin "nvim" ''
+          printf 'inner reloaded=%s\n' "''${NIXVIM_RELOADED:-unset}" >> "$STUB_LOG"
+          exit 77
+        '';
+        target = pkgs.writeShellScriptBin "nvim-target" ''
+          printf 'target reloaded=%s\n' "''${NIXVIM_RELOADED:-unset}" >> "$STUB_LOG"
+          exit 0
+        '';
+        decoy = pkgs.writeShellScriptBin "nvim" ''
+          echo 'decoy PATH nvim ran' >> "$STUB_LOG"
+          exit 0
+        '';
+        wrapped = reloadWrap pkgs inner;
+      in
+      pkgs.runCommand "reload-wrapper-handoff-test" { } ''
+        tmp=$(mktemp -d)
+        export STUB_LOG="$tmp/log"
+        export NIXVIM_RELOAD_TARGET_FILE="$tmp/target-file"
+        export PATH="${decoy}/bin:$PATH"
+        printf '%s\n' "${target}/bin/nvim-target" > "$NIXVIM_RELOAD_TARGET_FILE"
+        "${wrapped}/bin/nvim"
+        echo "=== invocation log ==="; cat "$STUB_LOG"
+        grep -qxF 'inner reloaded=unset' "$STUB_LOG" \
+          || { echo "FAIL: first run should be the inner nvim with no NIXVIM_RELOADED"; exit 1; }
+        grep -qxF 'target reloaded=1' "$STUB_LOG" \
+          || { echo "FAIL: exit 77 should re-exec the reloadTargetFile path with NIXVIM_RELOADED=1"; exit 1; }
+        grep -q 'decoy PATH nvim ran' "$STUB_LOG" \
+          && { echo "FAIL: must not fall back to PATH when the handoff names an executable"; exit 1; }
         echo PASS; touch "$out"
       '';
 
@@ -137,32 +193,50 @@ in
       # reloadWrap of build.package is only a configured editor when wrapRc bakes
       # the config in (the NixOS/nix-darwin default; home-manager sets it false).
       active = cfg.enable && cfg.wrapRc && cfg.reloadOnSignal.enable;
-      wrapped = lib.hiPrio (reloadWrap pkgs cfg.build.package);
+      wrappedNvim = reloadWrap pkgs cfg.build.package;
+      wrapped = lib.hiPrio wrappedNvim;
 
       # procps is Linux-only; macOS ships /usr/bin/pkill. `|| true` so a no-match
       # exit (no nvim running) doesn't fail activation.
       pkill =
         if pkgs.stdenv.hostPlatform.isDarwin then "/usr/bin/pkill" else lib.getExe' pkgs.procps "pkill";
-      signal = "${pkill} -USR1 nvim || true";
+      pkillSignal = "${pkill} -USR1 nvim || true";
+
+      # Hand the running editors the incoming generation's nvim by absolute path
+      # *before* signalling, then signal. The atomic rename means a reader never
+      # sees a half-written path; `|| true` keeps a write failure from breaking
+      # activation. `wrappedNvim` (unlike system.build.toplevel) does not depend on
+      # the activation script, so referencing it here introduces no recursion.
+      writeReloadTarget = ''
+        printf '%s\n' "${wrappedNvim}/bin/nvim" > "${reloadTargetFile}.tmp" \
+          && mv "${reloadTargetFile}.tmp" "${reloadTargetFile}" || true
+      '';
+      systemSignal = ''
+        ${writeReloadTarget}
+        ${pkillSignal}
+      '';
     in
     lib.mkMerge [
+      # home-manager's linkGeneration repoints the profile (and thus PATH) before
+      # this runs, so a plain PATH re-exec already lands on the new generation --
+      # no reloadTargetFile handoff needed (unwritable from a user activation).
       (lib.optionalAttrs isHome (
         lib.mkIf active {
           home.packages = [ wrapped ];
-          home.activation.reloadNvim = lib.hm.dag.entryAfter [ "linkGeneration" ] signal;
+          home.activation.reloadNvim = lib.hm.dag.entryAfter [ "linkGeneration" ] pkillSignal;
         }
       ))
       # nix-darwin has no custom named activation scripts; append to postActivation.
       (lib.optionalAttrs isDarwin (
         lib.mkIf active {
           environment.systemPackages = [ wrapped ];
-          system.activationScripts.postActivation.text = lib.mkAfter signal;
+          system.activationScripts.postActivation.text = lib.mkAfter systemSignal;
         }
       ))
       (lib.optionalAttrs isNixOS (
         lib.mkIf active {
           environment.systemPackages = [ wrapped ];
-          system.activationScripts.reloadNvim.text = signal;
+          system.activationScripts.reloadNvim.text = systemSignal;
         }
       ))
     ];
