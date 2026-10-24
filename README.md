@@ -42,6 +42,6 @@ There is no test suite — the configuration evaluating and building (`nix build
 
 **The config is organized feature-first.** Each file under [`config/`](config) owns one editor concern — searching, editing, the interface, navigation, git, LSP, completion — and keeps everything for that concern together: the plugins it needs, their options, and its keymaps. [`config/default.nix`](config/default.nix) is the aggregator that imports these feature files and sets global options. Plugin-specific helpers in [`config/plugins/`](config/plugins) are imported by the feature file that owns them, not auto-discovered.
 
-**Custom options live in [`modules/`](modules)** and are merged in before the config so it can use them — most notably `autoCmdGroup`, a convenience wrapper that expands into nixvim's `autoGroups` + `autoCmd` (see [`modules/auto-cmd-group.nix`](modules/auto-cmd-group.nix)).
+**Custom options live in [`modules/`](modules)** and are merged in before the config so it can use them — most notably `autoCmdGroup`, a convenience wrapper that expands into nixvim's `autoGroups` + `autoCmd` (see [`modules/auto-cmd-group.nix`](modules/auto-cmd-group.nix)). `lspAndLinters.enable` (default `true`, see [`modules/default.nix`](modules/default.nix)) gates every language server and linter; a headless host sets `programs.nixvim.lspAndLinters.enable = false` to keep the editor while dropping most of its closure.
 
 There is no `init.lua`; embedded Lua lives inside Nix strings via `__raw`. For the conventions used when extending the config, see [`CLAUDE.md`](CLAUDE.md).

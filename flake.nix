@@ -88,12 +88,22 @@
           };
 
           # Builds the full config and runs nvim headless to confirm it loads;
-          # the reload-* checks (defined in reload-integration.nix) cover the
-          # relaunch loop and the SIGUSR1 handler registration.
+          # lsp-and-linters-off does the same with the toggle off, so a reference
+          # to a gated plugin left outside its gate fails here. The reload-*
+          # checks (defined in reload-integration.nix) cover the relaunch loop
+          # and the SIGUSR1 handler registration.
           checks = {
             default = nixvimLib.check.mkTestDerivationFromNixvimModule {
               inherit pkgs;
               module = self.nixvimModules.default;
+            };
+            lsp-and-linters-off = nixvimLib.check.mkTestDerivationFromNixvimModule {
+              inherit pkgs;
+              name = "lsp-and-linters-off";
+              module = {
+                imports = [ self.nixvimModules.default ];
+                lspAndLinters.enable = false;
+              };
             };
           }
           // reloadFeature.mkChecks pkgs configuredNvim;
